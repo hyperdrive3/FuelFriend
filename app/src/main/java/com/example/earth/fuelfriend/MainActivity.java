@@ -1,5 +1,15 @@
 package com.example.earth.fuelfriend;
 
+/*
+
+Created by James Wong for a Waikato University New Zealand COMP477 Project
+Supervised by Mark Appereley
+
+1228302
+
+*/
+
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.IntentService;
