@@ -14,7 +14,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,11 +36,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -74,6 +75,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.earth.fuelfriend.Constants.ACTION_BIKE;
+import static com.example.earth.fuelfriend.Constants.ACTION_CAR;
+import static com.example.earth.fuelfriend.Constants.ACTION_WALK;
+import static com.example.earth.fuelfriend.Constants.NOTIFICATION_ID;
 import static com.example.earth.fuelfriend.Constants.POLYLINE_BIKE;
 import static com.example.earth.fuelfriend.Constants.POLYLINE_CAR;
 import static com.example.earth.fuelfriend.Constants.POLYLINE_WALK;
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CustomMarker> markerList;
     private HashMap<LatLng, CustomPolyline> polyLinesList;
     private ArrayList<Marker> googleMapMarkers;
+    private NotificationUtils notifications;
 
 
     @Override
@@ -108,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        notifications = new NotificationUtils();
         googleMapMarkers = new ArrayList<>();
         dbHelper = new DBHelper(this);
         markerList = dbHelper.getAllMarkers();
@@ -128,24 +135,8 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Intent intent = new Intent(this, NotificationActionService.class).setAction(ACTION_1);
-        // use System.currentTimeMillis() to have a unique ID for the pending intent
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-
-        Notification n = new Notification.Builder(this).setOngoing(true)
-                .setContentTitle("FuelFriend tracking...")
-                .setContentText("Tap to check in mode of movement")
-                .setSmallIcon(R.drawable.fuelfriend)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.blank_icon_small, "Walk", pIntent)
-                .addAction(R.drawable.blank_icon_small, "Car", pIntent)
-                .addAction(R.drawable.blank_icon_small, "Bike", pIntent).build();
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0, n);
+        //Notification method
+        notifications.displayNotification(getBaseContext(), R.drawable.fuelfriend, R.drawable.blank_icon_small);
 
         mSupportMapFragment.getMapAsync(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -283,19 +274,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            // TODO: Permission checks :\
             return;
         }
-
-        // Get geocode information
-        // Get distance information from polyline
-        // Add to database
 
         //Then add marker to map
         UNLOCK_ON_POLYLINE_ADDED = false;
@@ -304,10 +285,7 @@ public class MainActivity extends AppCompatActivity
         LatLng origin = markerList.get(markerList.size() -1).getCoordinates();
 
         markerList = dbHelper.getAllMarkers();
-/*        marker_test = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(t))))
-                .position(dest)
-                .title("New Marker placed by nav menu")
-                .snippet("New Marker snippet"));*/
+
         final AddNewMarkerThread r = new AddNewMarkerThread(t, origin, dest, addresses.get(0).getLocality());
         new Thread(r).start();
         drawPolyline(t, origin, dest);
@@ -634,22 +612,72 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public static final String ACTION_1 = "action_1";
 
-    public class NotificationActionService extends IntentService {
-        public NotificationActionService() {
-            super(NotificationActionService.class.getSimpleName());
+    public static class NotificationUtils {
+
+        public void displayNotification(Context context, int smallIcon, int actionIcon) {
+
+            Intent action_walk = new Intent(context, NotificationActionService.class)
+                    .setAction(ACTION_WALK);
+            PendingIntent actionPending_walk = PendingIntent.getService(context, 0,
+                    action_walk, 0);
+            Intent action_car = new Intent(context, NotificationActionService.class)
+                    .setAction(ACTION_CAR);
+            PendingIntent actionPending_car = PendingIntent.getService(context, 0,
+                    action_car, 0);
+            Intent action_bike = new Intent(context, NotificationActionService.class)
+                    .setAction(ACTION_BIKE);
+            PendingIntent actionPending_bike = PendingIntent.getService(context, 0,
+                    action_bike, 0);
+
+            NotificationCompat.Builder notificationBuilder =
+                    (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+                            .setOngoing(true)
+                            .setAutoCancel(true)
+                            .setSmallIcon(smallIcon)
+                            .setContentTitle("FuelFriend tracking...")
+                            .setContentText("Tap to create new transport path.")
+                            .addAction(new NotificationCompat.Action(actionIcon,
+                                    "Walk", actionPending_walk))
+                            .addAction(new NotificationCompat.Action(actionIcon,
+                                    "Car", actionPending_car))
+                            .addAction(new NotificationCompat.Action(actionIcon,
+                                    "Bike", actionPending_bike));
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+
         }
 
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            String action = intent.getAction();
+        public static class NotificationActionService extends IntentService {
+            public NotificationActionService() {
+                super(NotificationActionService.class.getSimpleName());
+            }
 
-            if (ACTION_1.equals(action)) {
-                // TODO: handle action 1.
-                System.out.println("YO WTF");
-                setNewTransportMarker(TRANSPORT_BIKE);
-                // If you want to cancel the notification: NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID);
+            @Override
+            protected void onHandleIntent(Intent intent) {
+                String action = intent.getAction();
+
+                DBHelper db = new DBHelper(getBaseContext());
+
+                switch(action) {
+                    case ACTION_WALK:
+                        System.out.println("I'm walking now.");
+                        break;
+
+                    case ACTION_CAR:
+                        System.out.println("I'm in a car now.");
+                        break;
+
+                    case ACTION_BIKE:
+                        System.out.println("I'm biking now.");
+
+                        break;
+
+                    default:
+                        System.out.println("Error, unrecognized notification action");
+
+                }
 
             }
         }
