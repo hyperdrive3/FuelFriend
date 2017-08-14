@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Marker> googleMapMarkers;
     private BroadcastReceiverNotificationActions actionButtonListener;
 
-
+    volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -668,8 +668,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-    volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     public class AddNewMarkerThread implements Runnable {
         String transport, dest_geolocation;
