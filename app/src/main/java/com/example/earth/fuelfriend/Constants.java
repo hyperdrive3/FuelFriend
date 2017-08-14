@@ -1,7 +1,6 @@
 package com.example.earth.fuelfriend;
 
 import android.graphics.Color;
-import android.util.StringBuilderPrinter;
 
 /**
  * Created by EARTH on 5/08/2017.
