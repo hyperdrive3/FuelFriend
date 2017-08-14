@@ -12,12 +12,12 @@ Supervised by Mark Appereley
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.IntentService;
-import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -104,17 +104,28 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<CustomMarker> markerList;
     private HashMap<LatLng, CustomPolyline> polyLinesList;
     private ArrayList<Marker> googleMapMarkers;
-    private NotificationUtils notifications;
+    private BroadcastReceiverNotificationActions actionButtonListener;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // dynamically register an instance of this class with Context.registerReceiver() in the manifest
+        // as you cannot use the manifest for non-static inner class BroadcastReceiver classes.
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("ACTION_CAR");
+        filter.addAction("ACTION_WALK");
+        filter.addAction("ACTION_BIKE");
+        this.registerReceiver(new BroadcastReceiverNotificationActions(), filter, null, null);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        notifications = new NotificationUtils();
+
+        actionButtonListener = new BroadcastReceiverNotificationActions();
         googleMapMarkers = new ArrayList<>();
         dbHelper = new DBHelper(this);
         markerList = dbHelper.getAllMarkers();
@@ -136,7 +147,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         //Notification method
-        notifications.displayNotification(getBaseContext(), R.drawable.fuelfriend, R.drawable.blank_icon_small);
+        actionButtonListener.createNotificationIntents(R.drawable.fuelfriend, R.drawable.blank_icon_small, getBaseContext());
 
         mSupportMapFragment.getMapAsync(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -612,23 +623,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public class BroadcastReceiverNotificationActions extends BroadcastReceiver {
 
-    public static class NotificationUtils {
+        public void createNotificationIntents(int smallIcon, int actionIcon, Context context) {
+            Intent bike_intent = new Intent();
+            bike_intent.setAction(ACTION_BIKE);
+            PendingIntent pendingIntentBike = PendingIntent.getBroadcast(context, 0, bike_intent, 0);
 
-        public void displayNotification(Context context, int smallIcon, int actionIcon) {
+            Intent car_intent = new Intent();
+            car_intent.setAction(ACTION_CAR);
+            PendingIntent pendingIntentCar = PendingIntent.getBroadcast(context, 0, car_intent, 0);
 
-            Intent action_walk = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_WALK);
-            PendingIntent actionPending_walk = PendingIntent.getService(context, 0,
-                    action_walk, 0);
-            Intent action_car = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_CAR);
-            PendingIntent actionPending_car = PendingIntent.getService(context, 0,
-                    action_car, 0);
-            Intent action_bike = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_BIKE);
-            PendingIntent actionPending_bike = PendingIntent.getService(context, 0,
-                    action_bike, 0);
+            Intent walk_intent = new Intent();
+            walk_intent.setAction(ACTION_BIKE);
+            PendingIntent pendingIntentWalk = PendingIntent.getBroadcast(context, 0, walk_intent, 0);
 
             NotificationCompat.Builder notificationBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(context)
@@ -638,47 +646,25 @@ public class MainActivity extends AppCompatActivity
                             .setContentTitle("FuelFriend tracking...")
                             .setContentText("Tap to create new transport path.")
                             .addAction(new NotificationCompat.Action(actionIcon,
-                                    "Walk", actionPending_walk))
+                                    "Walk", pendingIntentWalk))
                             .addAction(new NotificationCompat.Action(actionIcon,
-                                    "Car", actionPending_car))
+                                    "Car", pendingIntentCar))
                             .addAction(new NotificationCompat.Action(actionIcon,
-                                    "Bike", actionPending_bike));
+                                    "Bike", pendingIntentBike));
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-
         }
 
-        public static class NotificationActionService extends IntentService {
-            public NotificationActionService() {
-                super(NotificationActionService.class.getSimpleName());
-            }
-
-            @Override
-            protected void onHandleIntent(Intent intent) {
-                String action = intent.getAction();
-
-                DBHelper db = new DBHelper(getBaseContext());
-
-                switch(action) {
-                    case ACTION_WALK:
-                        System.out.println("I'm walking now.");
-                        break;
-
-                    case ACTION_CAR:
-                        System.out.println("I'm in a car now.");
-                        break;
-
-                    case ACTION_BIKE:
-                        System.out.println("I'm biking now.");
-
-                        break;
-
-                    default:
-                        System.out.println("Error, unrecognized notification action");
-
-                }
-
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_BIKE.equals(action)) {
+                setNewTransportMarker(TRANSPORT_BIKE);
+            } else if (ACTION_CAR.equals(action)) {
+                setNewTransportMarker(TRANSPORT_CAR);
+            } else if (ACTION_WALK.equals(action)) {
+                setNewTransportMarker(TRANSPORT_WALK);
             }
         }
     }

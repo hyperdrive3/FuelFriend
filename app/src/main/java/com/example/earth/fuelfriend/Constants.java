@@ -29,7 +29,7 @@ public final class Constants {
     public static final int POLYLINE_BIKE = Color.GREEN;
 
     public static final int NOTIFICATION_ID = 1;
-    public static final String ACTION_WALK = "action_walk";
-    public static final String ACTION_CAR = "action_car";
-    public static final String ACTION_BIKE = "action_bike";
+    public static final String ACTION_WALK = "ACTION_WALK";
+    public static final String ACTION_CAR = "ACTION_CAR";
+    public static final String ACTION_BIKE = "ACTION_BIKE";
 }
