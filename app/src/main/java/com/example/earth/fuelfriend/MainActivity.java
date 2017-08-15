@@ -295,11 +295,11 @@ public class MainActivity extends AppCompatActivity
 
         LatLng origin = markerList.get(markerList.size() - 1).getCoordinates();
 
-        markerList = dbHelper.getAllMarkers();
-
         final AddNewMarkerThread r = new AddNewMarkerThread(t, origin, dest, addresses.get(0).getLocality());
         new Thread(r).start();
-        drawPolyline(t, origin, dest);
+        drawPolyline(markerList.get(markerList.size() - 1).getTransportMode(), origin, dest);
+
+        markerList = dbHelper.getAllMarkers();
 
     }
 
