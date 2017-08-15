@@ -268,17 +268,17 @@ public class MainActivity extends AppCompatActivity
         mGoogleApiClient.connect();
     }
 
-    public void setNewTransportMarker(String t) {
+    public void setNewTransportMarker(String transport) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String currentDateandTime = sdf.format(new Date());
-        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = getLastKnownLocation();
         LatLng dest = new LatLng(location.getLatitude(), location.getLongitude());
 
         List<Address> addresses = null;
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-             addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -291,15 +291,15 @@ public class MainActivity extends AppCompatActivity
 
         //Then add marker to map
         UNLOCK_ON_POLYLINE_ADDED = false;
-        dbHelper.insertMarker(dest, t, currentDateandTime, addresses.get(0).getLocality());
+        dbHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality());
 
-        LatLng origin = markerList.get(markerList.size() -1).getCoordinates();
+        LatLng origin = markerList.get(markerList.size() - 1).getCoordinates();
+
+        final AddNewMarkerThread r = new AddNewMarkerThread(transport, origin, dest, addresses.get(0).getLocality());
+        new Thread(r).start();
+        drawPolyline(markerList.get(markerList.size() - 1).getTransportMode(), origin, dest);
 
         markerList = dbHelper.getAllMarkers();
-
-        final AddNewMarkerThread r = new AddNewMarkerThread(t, origin, dest, addresses.get(0).getLocality());
-        new Thread(r).start();
-        drawPolyline(t, origin, dest);
 
     }
 
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity
 
             String title_text = "TEST", snippet_text = "TEST SNIPPET";
             CustomMarker cm = markerList.get(i);
-            if(i < markerList.size() - 1) {
+            if (i < markerList.size() - 1) {
                 title_text = createTitleText(cm, markerList.get(i + 1).getGeoLocation()); // i + 1 representing the destination of the origin marker
                 snippet_text = createSnippetText(cm.getDistance());
             }
@@ -384,6 +384,39 @@ public class MainActivity extends AppCompatActivity
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(gpsOptionsIntent);
         }
+    }
+
+    private Location getLastKnownLocation() {
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            System.out.println("last known location, provider: %s, location: %s" + provider +
+                    l);
+
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null
+                    || l.getAccuracy() < bestLocation.getAccuracy()) {
+                System.out.println("found best last known location: %s" + l);
+                bestLocation = l;
+            }
+        }
+        if (bestLocation == null) {
+            return null;
+        }
+        return bestLocation;
     }
 
     @Override

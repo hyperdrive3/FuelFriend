@@ -6,7 +6,7 @@ import android.graphics.Color;
  * Created by EARTH on 5/08/2017.
  */
 
-public final class Constants {
+final class Constants {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Marker.db";
