@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
         mGoogleApiClient.connect();
     }
 
-    public void setNewTransportMarker(String t) {
+    public void setNewTransportMarker(String transport) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String currentDateandTime = sdf.format(new Date());
@@ -291,11 +291,11 @@ public class MainActivity extends AppCompatActivity
 
         //Then add marker to map
         UNLOCK_ON_POLYLINE_ADDED = false;
-        dbHelper.insertMarker(dest, t, currentDateandTime, addresses.get(0).getLocality());
+        dbHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality());
 
         LatLng origin = markerList.get(markerList.size() - 1).getCoordinates();
 
-        final AddNewMarkerThread r = new AddNewMarkerThread(t, origin, dest, addresses.get(0).getLocality());
+        final AddNewMarkerThread r = new AddNewMarkerThread(transport, origin, dest, addresses.get(0).getLocality());
         new Thread(r).start();
         drawPolyline(markerList.get(markerList.size() - 1).getTransportMode(), origin, dest);
 
