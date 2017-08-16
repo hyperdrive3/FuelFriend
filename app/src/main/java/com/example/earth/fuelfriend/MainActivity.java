@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         //Notification method
-        mActionListner.createNotificationIntents(R.drawable.fuelfriend, R.drawable.blank_icon_small, getBaseContext());
+        mActionListner.createNotificationIntents(R.drawable.ic_gas_petrol_24dp_white, R.drawable.blank_icon_small, getBaseContext());
 
         mSupportMapFragment.getMapAsync(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
