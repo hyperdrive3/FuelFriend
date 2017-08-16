@@ -29,9 +29,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -44,7 +42,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -85,6 +82,7 @@ import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
 import static com.example.earth.fuelfriend.GeneralHelper.downloadUrl;
 import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
 import static com.example.earth.fuelfriend.GeneralHelper.getIcon;
+import static com.example.earth.fuelfriend.GeneralHelper.getTransportColor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -139,14 +137,14 @@ public class MainActivity extends AppCompatActivity
         mPolylines = new HashMap<>();
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Fuel Consumption: 23.5 Litres", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -315,20 +313,8 @@ public class MainActivity extends AppCompatActivity
 
     public void drawPolyline(String t, LatLng a, LatLng b) {
 
-        int polyline_color;
-        switch (t) {
-            case TRANSPORT_CAR:
-                polyline_color = getBaseContext().getResources().getColor(R.color.colorCarLine);
-                break;
-            case TRANSPORT_BIKE:
-                polyline_color = getBaseContext().getResources().getColor(R.color.colorBikeLine);
-                break;
-            default:
-                polyline_color = getBaseContext().getResources().getColor(R.color.colorWalkLine);
-        }
-
         String url = getDirectionsUrl(a, b);
-        DownloadTask downloadTask = new DownloadTask(polyline_color, a);
+        DownloadTask downloadTask = new DownloadTask(getTransportColor(t, getBaseContext()), a);
         downloadTask.execute(url);
     }
 
@@ -367,7 +353,7 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < mMarkerInformation.size(); i++) {
             asyncDrawPolylines(i); // Draw poly lines
 
-            String title_text = "TEST", snippet_text = "TEST SNIPPET";
+            String title_text = mMarkerInformation.get(mMarkerInformation.size() - 1).getGeoLocation() + "|" + mMarkerInformation.get(mMarkerInformation.size() - 1).getTransportMode(), snippet_text = "Getting\ndata...";
             CustomMarker cm = mMarkerInformation.get(i);
             if (i < mMarkerInformation.size() - 1) {
                 title_text = createTitleText(cm, mMarkerInformation.get(i + 1).getGeoLocation()); // i + 1 representing the destination of the origin marker
@@ -411,15 +397,14 @@ public class MainActivity extends AppCompatActivity
                 return null;
             }
             Location l = mLocationManager.getLastKnownLocation(provider);
-            System.out.println("last known location, provider: %s, location: %s" + provider +
-                    l);
+            //System.out.println("last known location, provider: %s, location: %s" + provider + l);
 
             if (l == null) {
                 continue;
             }
             if (bestLocation == null
                     || l.getAccuracy() < bestLocation.getAccuracy()) {
-                System.out.println("found best last known location: %s" + l);
+                //System.out.println("found best last known location: %s" + l);
                 bestLocation = l;
             }
         }
@@ -443,7 +428,7 @@ public class MainActivity extends AppCompatActivity
             // in a raw resource file.
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.map_style_json));
+                            this, R.raw.map_style));
 
             if (!success) {
                 Log.e(null, "Style parsing failed.");
