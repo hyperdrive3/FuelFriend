@@ -1,5 +1,9 @@
 package com.example.earth.fuelfriend;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -66,9 +70,9 @@ public final class GeneralHelper {
             case TRANSPORT_BIKE:
                 return R.drawable.ic_bike_24dp;
             case TRANSPORT_CAR:
-                return R.drawable.ic_car_transport_24dp;
+                return R.drawable.ic_car_24dp;
             default:
-                return R.drawable.ic_directions_walk_black_24dp;
+                return R.drawable.ic_walk_24dp;
         }
     }
 
@@ -99,6 +103,19 @@ public final class GeneralHelper {
     public static String createSnippetText(Double distance) {
         return "Distance travelled: " + String.format("%.4f", distance)         + " km\n" +
                "Fuel Consumption: "   + String.format( "%.4f", 0.05 * distance) + " Litre/KM";
+    }
+
+    public static Bitmap getBitmap(int drawableRes, Context context) {
+
+        Drawable drawable = context.getDrawable(drawableRes);
+
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
 
