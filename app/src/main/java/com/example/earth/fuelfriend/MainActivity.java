@@ -20,9 +20,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -79,9 +76,6 @@ import static com.example.earth.fuelfriend.Constants.ACTION_BIKE;
 import static com.example.earth.fuelfriend.Constants.ACTION_CAR;
 import static com.example.earth.fuelfriend.Constants.ACTION_WALK;
 import static com.example.earth.fuelfriend.Constants.NOTIFICATION_ID;
-import static com.example.earth.fuelfriend.Constants.POLYLINE_BIKE;
-import static com.example.earth.fuelfriend.Constants.POLYLINE_CAR;
-import static com.example.earth.fuelfriend.Constants.POLYLINE_WALK;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
@@ -89,6 +83,7 @@ import static com.example.earth.fuelfriend.GeneralHelper.convertStringDistanceTo
 import static com.example.earth.fuelfriend.GeneralHelper.createSnippetText;
 import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
 import static com.example.earth.fuelfriend.GeneralHelper.downloadUrl;
+import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
 import static com.example.earth.fuelfriend.GeneralHelper.getIcon;
 
 public class MainActivity extends AppCompatActivity
@@ -100,11 +95,11 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private SupportMapFragment mSupportMapFragment;
     private LocationManager mLocationManager;
-    private DBHelper dbHelper;
-    private ArrayList<CustomMarker> markerList;
-    private HashMap<LatLng, CustomPolyline> polyLinesList;
+    private DBHelper mDatabaseHelper;
+    private ArrayList<? extends CustomMarker> mMarkerInformation;
+    private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
-    private BroadcastReceiverNotificationActions actionButtonListener;
+    private BroadcastReceiverNotificationActions mActionListner;
 
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
@@ -124,13 +119,26 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        actionButtonListener = new BroadcastReceiverNotificationActions();
         googleMapMarkers = new ArrayList<>();
-        dbHelper = new DBHelper(this);
-        markerList = dbHelper.getAllMarkers();
-        polyLinesList = new HashMap<>();
+        mActionListner = new BroadcastReceiverNotificationActions();
+        mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
+
+/*        if(savedInstanceState != null) {
+            mPolylines = (HashMap<LatLng, CustomPolyline>) savedInstanceState.getSerializable("polyLineList");
+            mMarkerInformation = savedInstanceState.getParcelableArrayList("mMarkerInformation");
+
+            System.out.println(mPolylines.size() + " IS HASHMAP SIZE");
+            for(CustomMarker cm : mMarkerInformation) {
+                mMap.addPolyline(mPolylines.get(cm.getCoordinates()).getPolyLine());
+            }
+            System.out.println("Restored state");
+
+        }*/
+        mMarkerInformation = mDatabaseHelper.getAllMarkers();
+        mPolylines = new HashMap<>();
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         //Notification method
-        actionButtonListener.createNotificationIntents(R.drawable.fuelfriend, R.drawable.blank_icon_small, getBaseContext());
+        mActionListner.createNotificationIntents(R.drawable.fuelfriend, R.drawable.blank_icon_small, getBaseContext());
 
         mSupportMapFragment.getMapAsync(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -159,13 +167,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // latLngArrayList = savedInstanceState.getParcelableArrayList("markerList");
+        // latLngArrayList = savedInstanceState.getParcelableArrayList("mMarkerInformation");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        // outState.putParcelableArrayList("markerList", latLngArrayList);
+/*        outState.putParcelableArrayList("mMarkerInformation", (ArrayList<? extends Parcelable>) mMarkerInformation);
+        System.out.println("Size of saved Polylines " + mPolylines.size());
+        outState.putSerializable("mPolylines", mPolylines);*/
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
@@ -291,15 +301,15 @@ public class MainActivity extends AppCompatActivity
 
         //Then add marker to map
         UNLOCK_ON_POLYLINE_ADDED = false;
-        dbHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality());
+        mDatabaseHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality());
 
-        LatLng origin = markerList.get(markerList.size() - 1).getCoordinates();
+        LatLng origin = mMarkerInformation.get(mMarkerInformation.size() - 1).getCoordinates();
 
         final AddNewMarkerThread r = new AddNewMarkerThread(transport, origin, dest, addresses.get(0).getLocality());
         new Thread(r).start();
-        drawPolyline(markerList.get(markerList.size() - 1).getTransportMode(), origin, dest);
+        drawPolyline(mMarkerInformation.get(mMarkerInformation.size() - 1).getTransportMode(), origin, dest);
 
-        markerList = dbHelper.getAllMarkers();
+        mMarkerInformation = mDatabaseHelper.getAllMarkers();
 
     }
 
@@ -308,13 +318,13 @@ public class MainActivity extends AppCompatActivity
         int polyline_color;
         switch (t) {
             case TRANSPORT_CAR:
-                polyline_color = POLYLINE_CAR;
+                polyline_color = getBaseContext().getResources().getColor(R.color.colorCarLine);
                 break;
             case TRANSPORT_BIKE:
-                polyline_color = POLYLINE_BIKE;
+                polyline_color = getBaseContext().getResources().getColor(R.color.colorBikeLine);
                 break;
             default:
-                polyline_color = POLYLINE_WALK;
+                polyline_color = getBaseContext().getResources().getColor(R.color.colorWalkLine);
         }
 
         String url = getDirectionsUrl(a, b);
@@ -341,31 +351,31 @@ public class MainActivity extends AppCompatActivity
 
     public void handlePolyline(int i) {
 
-        CustomMarker cm = markerList.get(i);
+        CustomMarker cm = mMarkerInformation.get(i);
         LatLng cmOrigin = cm.getCoordinates();
 
-        if (polyLinesList.containsKey(cmOrigin)) {
-            mMap.addPolyline(polyLinesList.get(cmOrigin).getPolyLine());
+        if (mPolylines.containsKey(cmOrigin)) {
+            mMap.addPolyline(mPolylines.get(cmOrigin).getPolyLine());
         } else if (i > 0)
-            drawPolyline(markerList.get(i - 1).getTransportMode(), markerList.get(i - 1).getCoordinates(), cm.getCoordinates());
+            drawPolyline(mMarkerInformation.get(i - 1).getTransportMode(), mMarkerInformation.get(i - 1).getCoordinates(), cm.getCoordinates());
     }
 
 
     public void refreshMap() throws InterruptedException {
 
         mMap.clear();
-        for (int i = 0; i < markerList.size(); i++) {
+        for (int i = 0; i < mMarkerInformation.size(); i++) {
             asyncDrawPolylines(i); // Draw poly lines
 
             String title_text = "TEST", snippet_text = "TEST SNIPPET";
-            CustomMarker cm = markerList.get(i);
-            if (i < markerList.size() - 1) {
-                title_text = createTitleText(cm, markerList.get(i + 1).getGeoLocation()); // i + 1 representing the destination of the origin marker
+            CustomMarker cm = mMarkerInformation.get(i);
+            if (i < mMarkerInformation.size() - 1) {
+                title_text = createTitleText(cm, mMarkerInformation.get(i + 1).getGeoLocation()); // i + 1 representing the destination of the origin marker
                 snippet_text = createSnippetText(cm.getDistance());
             }
 
             Marker marker = mMap.addMarker(new MarkerOptions() // Draw markers
-                    .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()))))
+                    .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()), getBaseContext())))
                     .position(new LatLng(cm.getCoordinates().latitude, cm.getCoordinates().longitude))
                     .title(title_text)
                     .snippet(snippet_text));
@@ -422,7 +432,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerList.get(1).getCoordinates(), 13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMarkerInformation.get(1).getCoordinates(), 13));
         enableGPS();
 
         CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainActivity.this);
@@ -455,7 +465,7 @@ public class MainActivity extends AppCompatActivity
             mMap.setMyLocationEnabled(true);
         }
 
-        markerList = dbHelper.getAllMarkers();
+        mMarkerInformation = mDatabaseHelper.getAllMarkers();
 
         try {
             refreshMap();
@@ -463,18 +473,6 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-    }
-
-    private Bitmap getBitmap(int drawableRes) {
-
-        Drawable drawable = getResources().getDrawable(drawableRes);
-        Canvas canvas = new Canvas();
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        canvas.setBitmap(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 
     @Override
@@ -649,7 +647,7 @@ public class MainActivity extends AppCompatActivity
             //Toast.makeText(getBaseContext(), "DISTANCE: " + distance + ", FUEL USAGE: " + 0.0500 * 1.8 + "KM/Litre", Toast.LENGTH_LONG).show();
 
             // Drawing polyline in the Google Map for the i-th route
-            polyLinesList.put(origin, new CustomPolyline(lineOptions, distance));
+            mPolylines.put(origin, new CustomPolyline(lineOptions, distance));
             mMap.addPolyline(lineOptions);
             UNLOCK_ON_POLYLINE_ADDED = true;
 
@@ -717,8 +715,8 @@ public class MainActivity extends AppCompatActivity
         public void run() {
             while (true) {
                 if (UNLOCK_ON_POLYLINE_ADDED) {
-                    if(polyLinesList.containsKey(origin)) {
-                        dbHelper.updateEntryDistance(convertStringDistanceToDouble(polyLinesList.get(origin).getPolylineDistance()));
+                    if (mPolylines.containsKey(origin)) {
+                        mDatabaseHelper.updateEntryDistance(convertStringDistanceToDouble(mPolylines.get(origin).getPolylineDistance()));
                     }
 
                     runOnUiThread(new Runnable() {
@@ -726,17 +724,17 @@ public class MainActivity extends AppCompatActivity
                         public void run() {
 
                             Marker originMarker = googleMapMarkers.get(googleMapMarkers.size() - 1);
-                            CustomMarker cm = markerList.get(markerList.size() - 2);
-                            Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()))))
+                            CustomMarker cm = mMarkerInformation.get(mMarkerInformation.size() - 2);
+                            Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()), getBaseContext())))
                                     .position(new LatLng(origin.latitude, origin.longitude))
                                     .title(createTitleText(cm, dest_geolocation))
-                                    .snippet(createSnippetText(convertStringDistanceToDouble(polyLinesList.get(origin).getPolylineDistance()))));
+                                    .snippet(createSnippetText(convertStringDistanceToDouble(mPolylines.get(origin).getPolylineDistance()))));
 
                             originMarker.remove();
                             googleMapMarkers.remove(googleMapMarkers.size() - 1);
                             googleMapMarkers.add(marker_1);
 
-                            Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(transport))))
+                            Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(transport), getBaseContext())))
                                     .position(new LatLng(dest.latitude, dest.longitude))
                                     .title(dest_geolocation)
                                     .snippet("No information on this leg of travel.\nStatus: In Transit"));
