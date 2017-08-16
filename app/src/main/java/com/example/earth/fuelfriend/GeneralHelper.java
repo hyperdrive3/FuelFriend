@@ -46,7 +46,7 @@ public final class GeneralHelper {
 
             StringBuffer sb = new StringBuffer();
 
-            String line = "";
+            String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
@@ -76,6 +76,23 @@ public final class GeneralHelper {
         }
     }
 
+    public static int getTransportColor(String transport, Context context) {
+
+        int polyline_color;
+        switch (transport) {
+            case TRANSPORT_CAR:
+                polyline_color = context.getResources().getColor(R.color.colorCarLine);
+                break;
+            case TRANSPORT_BIKE:
+                polyline_color = context.getResources().getColor(R.color.colorBikeLine);
+                break;
+            default:
+                polyline_color = context.getResources().getColor(R.color.colorWalkLine);
+        }
+
+        return polyline_color;
+    }
+
     // Expand on this to make it customizible via UI
     public static double getFuelConsumption(double distance) {
         return 0.0500 * distance;
@@ -93,16 +110,12 @@ public final class GeneralHelper {
     }
 
     public static String createTitleText(CustomMarker origin, String dest) {
-
-        System.out.println(dest);
-        return "Travelling by " + origin.getTransportMode() + "\n"
-                + "From: " + origin.getGeoLocation() + "\n"
-                + "To: " + dest;
+        return dest + "|" + origin.getTransportMode();
     }
 
     public static String createSnippetText(Double distance) {
-        return "Distance travelled: " + String.format("%.4f", distance)         + " km\n" +
-               "Fuel Consumption: "   + String.format( "%.4f", 0.05 * distance) + " Litre/KM";
+        return String.format("%.1f", distance) + " km\n" +
+                String.format("%.2f", 0.05 * distance) + " Litres";
     }
 
     public static Bitmap getBitmap(int drawableRes, Context context) {

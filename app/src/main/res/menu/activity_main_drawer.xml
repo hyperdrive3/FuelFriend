@@ -13,7 +13,7 @@
             android:title="@string/set_consumption_values" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_sentiment_very_satisfied_black_24dp"
+            android:icon="@drawable/ic_satisfied_24dp"
             android:title="@string/about" />
     </group>
 

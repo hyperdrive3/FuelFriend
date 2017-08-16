@@ -6,4 +6,6 @@
     <color name="colorCarLine">#D81111</color>
     <color name="colorBikeLine">#23D600</color>
     <color name="colorWalkLine">#0055FF</color>
+    <color name="colorInfoWindow">#e5d07e</color>
+    <color name="colorInfoWindowDark">#bcab65</color>
 </resources>
