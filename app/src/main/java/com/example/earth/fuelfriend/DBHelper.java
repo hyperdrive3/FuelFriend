@@ -39,12 +39,12 @@ import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
  * Created by EARTH on 2/08/2017.
  */
 
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
-    static ArrayList<LatLng> latLngArrayList;
+    private static ArrayList<LatLng> latLngArrayList;
 
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, FF_DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -88,7 +88,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<CustomMarker> getAllMarkers() {
+    ArrayList<CustomMarker> getAllMarkers() {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + MKR_TABLE_NAME, null);
@@ -111,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Putting default values in
-    public ContentValues createMarkerDbEntry(LatLng l, String transport, String date) {
+    private ContentValues createMarkerDbEntry(LatLng l, String transport, String date) {
 
         Random r = new Random();
         ContentValues contentValues = new ContentValues();
@@ -127,7 +127,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Putting default transport values in
-    public ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year, String plate) {
+    private ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year, String plate) {
 
         ContentValues contentValues = new ContentValues();
 
@@ -142,7 +142,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void setDefaultLabel(SQLiteDatabase db) {
+    private void setDefaultLabel(SQLiteDatabase db) {
         // create default label
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String currentDateandTime = sdf.format(new Date());
@@ -157,6 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_CAR, currentDateandTime));
         }
 
+        // LITERS NOT GALLONS
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016, "FRI3ND"));
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017, "FU3L"));
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017, "F45TC4R"));
@@ -164,8 +165,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    long id;
-    public void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
+    private long id;
+
+    void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -180,11 +182,11 @@ public class DBHelper extends SQLiteOpenHelper {
         id = db.insert(MKR_TABLE_NAME, null, contentValues);
     }
 
-    public void updateEntryDistance(double distance) {
+    void updateEntryDistance(double distance) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(MKR_DISTANCE, distance);
-        //SQL INCORRECT
+
         db.update(MKR_TABLE_NAME, cv, MKR_ID + "=?", new String[] {String.valueOf(id)});
     }
 
