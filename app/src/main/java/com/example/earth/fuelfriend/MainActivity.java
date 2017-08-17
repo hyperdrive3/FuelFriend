@@ -223,6 +223,8 @@ public class MainActivity extends AppCompatActivity
             else sFm.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_manage) {
             sFm.beginTransaction().hide(mSupportMapFragment).commit();
+        } else if (id == R.id.nav_add) {
+
         } else if (id == R.id.nav_about) {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -318,7 +320,6 @@ public class MainActivity extends AppCompatActivity
         downloadTask.execute(url);
     }
 
-
     public void asyncDrawPolylines(final int i) {
         Runnable task = new Runnable() {
 
@@ -334,7 +335,6 @@ public class MainActivity extends AppCompatActivity
         new Thread(task, "ServiceThread").start();
     }
 
-
     public void handlePolyline(int i) {
 
         CustomMarker cm = mMarkerInformation.get(i);
@@ -345,7 +345,6 @@ public class MainActivity extends AppCompatActivity
         } else if (i > 0)
             drawPolyline(mMarkerInformation.get(i - 1).getTransportMode(), mMarkerInformation.get(i - 1).getCoordinates(), cm.getCoordinates());
     }
-
 
     public void refreshMap() throws InterruptedException {
 
@@ -508,7 +507,6 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, "Info window clicked",
                 Toast.LENGTH_LONG).show();
     }
-
 
     // Fetches data from url passed
     public class DownloadTask extends AsyncTask<String, Void, String> {
