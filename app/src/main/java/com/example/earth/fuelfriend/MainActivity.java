@@ -90,14 +90,12 @@ public class MainActivity extends AppCompatActivity
         LocationListener {
 
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
     private SupportMapFragment mSupportMapFragment;
     private LocationManager mLocationManager;
     private DBHelper mDatabaseHelper;
     private ArrayList<? extends CustomMarker> mMarkerInformation;
     private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
-    private BroadcastReceiverNotificationActions mActionListner;
 
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         googleMapMarkers = new ArrayList<>();
-        mActionListner = new BroadcastReceiverNotificationActions();
+        BroadcastReceiverNotificationActions mActionListner = new BroadcastReceiverNotificationActions();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
 
@@ -270,7 +268,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -706,6 +704,7 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void run() {
 
+                            // Updating the 2nd to last marker with new information since new marker added.
                             Marker originMarker = googleMapMarkers.get(googleMapMarkers.size() - 1);
                             CustomMarker cm = mMarkerInformation.get(mMarkerInformation.size() - 2);
                             Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(cm.getTransportMode()), getBaseContext())))
@@ -717,10 +716,11 @@ public class MainActivity extends AppCompatActivity
                             googleMapMarkers.remove(googleMapMarkers.size() - 1);
                             googleMapMarkers.add(marker_1);
 
+                            // New marker with no distance info as its waiting for another marker to be placed.
                             Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(transport), getBaseContext())))
                                     .position(new LatLng(dest.latitude, dest.longitude))
-                                    .title(dest_geolocation)
-                                    .snippet("No information on this leg of travel.\nStatus: In Transit"));
+                                    .title(createTitleText(mMarkerInformation.get(mMarkerInformation.size() - 1), dest_geolocation))
+                                    .snippet("Getting\ndata..."));
 
                             googleMapMarkers.add(marker);
                         }
