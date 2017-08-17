@@ -31,7 +31,6 @@ import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_PER_KM;
 import static com.example.earth.fuelfriend.Constants.TRANS_ID;
 import static com.example.earth.fuelfriend.Constants.TRANS_MAKE;
 import static com.example.earth.fuelfriend.Constants.TRANS_MODEL;
-import static com.example.earth.fuelfriend.Constants.TRANS_NAME;
 import static com.example.earth.fuelfriend.Constants.TRANS_PLATE;
 import static com.example.earth.fuelfriend.Constants.TRANS_TABLE_NAME;
 import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
@@ -62,7 +61,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + TRANS_TABLE_NAME + "(" +
                 TRANS_ID + " INTEGER PRIMARY KEY, " +
-                TRANS_NAME + " TEXT, " +
                 TRANS_MODEL + " TEXT, " +
                 TRANS_MAKE + " TEXT, " +
                 TRANS_CAPACITY + " REAL, " +
@@ -113,7 +111,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Putting default values in
-    public ContentValues getCV(LatLng l, String transport, String date) {
+    public ContentValues createMarkerDbEntry(LatLng l, String transport, String date) {
 
         Random r = new Random();
         ContentValues contentValues = new ContentValues();
@@ -128,6 +126,22 @@ public class DBHelper extends SQLiteOpenHelper {
         return contentValues;
     }
 
+    // Putting default transport values in
+    public ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year, String plate) {
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(TRANS_MAKE, make);
+        contentValues.put(TRANS_MODEL, model);
+        contentValues.put(TRANS_CAPACITY, capacity);
+        contentValues.put(TRANS_FUEL_PER_KM, rate);
+        contentValues.put(TRANS_YEAR, year);
+        contentValues.put(TRANS_PLATE, plate);
+
+        return contentValues;
+
+    }
+
     public void setDefaultLabel(SQLiteDatabase db) {
         // create default label
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -136,12 +150,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
             LatLng l = latLngArrayList.get(i);
             if(i == 2 || i == 5)
-                db.insert(MKR_TABLE_NAME, null, getCV(l, TRANSPORT_WALK, currentDateandTime));
+                db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_WALK, currentDateandTime));
             else if(i == 4 || i == 6){
-                db.insert(MKR_TABLE_NAME, null, getCV(l, TRANSPORT_BIKE, currentDateandTime));
+                db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_BIKE, currentDateandTime));
             }else
-            db.insert(MKR_TABLE_NAME, null, getCV(l, TRANSPORT_CAR, currentDateandTime));
+                db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_CAR, currentDateandTime));
         }
+
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016, "FRI3ND"));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017, "FU3L"));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017, "F45TC4R"));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017, "CYKABLY7"));
 
     }
 
