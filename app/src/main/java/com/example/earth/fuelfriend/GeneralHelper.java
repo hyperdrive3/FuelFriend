@@ -64,7 +64,7 @@ public final class GeneralHelper {
         return data;
     }
 
-    public static int getIcon(String transport) {
+    public static int getTransportIcon(String transport) {
 
         switch (transport) {
             case TRANSPORT_BIKE:
@@ -115,13 +115,12 @@ public final class GeneralHelper {
 
     public static String createSnippetText(Double distance) {
         return String.format("%.1f", distance) + " km\n" +
-                String.format("%.2f", 0.05 * distance) + " Litres";
+                String.format("%.2f", 0.05 * distance) + " L";
     }
 
     public static Bitmap getBitmap(int drawableRes, Context context) {
 
         Drawable drawable = context.getDrawable(drawableRes);
-
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         canvas.setBitmap(bitmap);
