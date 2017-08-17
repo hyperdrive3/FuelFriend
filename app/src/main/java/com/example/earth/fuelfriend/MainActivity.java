@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        BroadcastReceiverNotificationActions mActionListner = new BroadcastReceiverNotificationActions();
         // dynamically register an instance of this class with Context.registerReceiver() in the manifest
         // as you cannot use the manifest for non-static inner class BroadcastReceiver classes.
         IntentFilter filter = new IntentFilter();
@@ -116,33 +117,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         googleMapMarkers = new ArrayList<>();
-        BroadcastReceiverNotificationActions mActionListner = new BroadcastReceiverNotificationActions();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
 
-/*        if(savedInstanceState != null) {
-            mPolylines = (HashMap<LatLng, CustomPolyline>) savedInstanceState.getSerializable("polyLineList");
-            mMarkerInformation = savedInstanceState.getParcelableArrayList("mMarkerInformation");
-
-            System.out.println(mPolylines.size() + " IS HASHMAP SIZE");
-            for(CustomMarker cm : mMarkerInformation) {
-                mMap.addPolyline(mPolylines.get(cm.getCoordinates()).getPolyLine());
-            }
-            System.out.println("Restored state");
-
-        }*/
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
-
-
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Fuel Consumption: 23.5 Litres", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -326,7 +305,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     handlePolyline(i);
                 } catch (Exception ex) {
-                    System.err.print("WTF HAPPENED?? ERRORED OUT");
+                    System.err.print("WTF HAPPENED?? ERRORED OUT drawing polylines");
                 }
             }
         };
