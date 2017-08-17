@@ -20,4 +20,6 @@
     <string name="set_consumption_values">Set Consumption Values</string>
     <string name="about">About</string>
     <string name="map">Map</string>
+    <string name="add_new_vehicle">Add New Vehicle</string>
+    <string name="view_vehicles">View Vehicles</string>
 </resources>
