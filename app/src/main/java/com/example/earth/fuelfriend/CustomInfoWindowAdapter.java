@@ -42,8 +42,7 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter{
         String transport = marker.getTitle();
         transport = transport.substring(transport.indexOf("|") + 1, transport.length()); // Anchoring the Transport method onto the marker title. Such a hack..
         String savingStatus = (transport.equals(TRANSPORT_CAR)) ? "Used" : "Saved";
-
-
+        
         ivTransport.setImageResource(getTransportIcon(transport));
         tvTitle.setText(marker.getTitle().substring(0, marker.getTitle().indexOf("|"))); // Removing the transport method before displaying title of marker
         tvSubTitle.setText(marker.getSnippet());
