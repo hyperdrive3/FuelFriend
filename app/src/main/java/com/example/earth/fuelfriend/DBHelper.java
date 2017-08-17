@@ -26,6 +26,15 @@ import static com.example.earth.fuelfriend.Constants.MKR_TRANSPORT;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
+import static com.example.earth.fuelfriend.Constants.TRANS_CAPACITY;
+import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_PER_KM;
+import static com.example.earth.fuelfriend.Constants.TRANS_ID;
+import static com.example.earth.fuelfriend.Constants.TRANS_MAKE;
+import static com.example.earth.fuelfriend.Constants.TRANS_MODEL;
+import static com.example.earth.fuelfriend.Constants.TRANS_NAME;
+import static com.example.earth.fuelfriend.Constants.TRANS_PLATE;
+import static com.example.earth.fuelfriend.Constants.TRANS_TABLE_NAME;
+import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
 /**
  * Created by EARTH on 2/08/2017.
@@ -50,6 +59,17 @@ public class DBHelper extends SQLiteOpenHelper {
                     MKR_GEOLOCATION + " TEXT, " +
                     MKR_TRANSPORT + " TEXT)"
                  );
+
+        db.execSQL("CREATE TABLE " + TRANS_TABLE_NAME + "(" +
+                TRANS_ID + " INTEGER PRIMARY KEY, " +
+                TRANS_NAME + " TEXT, " +
+                TRANS_MODEL + " TEXT, " +
+                TRANS_MAKE + " TEXT, " +
+                TRANS_CAPACITY + " REAL, " +
+                TRANS_FUEL_PER_KM + " REAL, " +
+                TRANS_YEAR + " REAL, " +
+                TRANS_PLATE + " TEXT)"
+        );
 
         setDefaultLabel(db);
     }
