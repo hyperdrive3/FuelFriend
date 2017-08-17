@@ -3,9 +3,10 @@
     <color name="colorPrimary">#002e7a</color>
     <color name="colorPrimaryDark">#00225b</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorCarLine">#e8a200</color>
-    <color name="colorBikeLine">#23D600</color>
-    <color name="colorWalkLine">#0055FF</color>
-    <color name="colorInfoWindow">#e5d07e</color>
-    <color name="colorInfoWindowDark">#bcab65</color>
+    <color name="colorCarLine">#8e0439</color>
+    <color name="colorBikeLine">#006633</color>
+    <color name="colorWalkLine">#0d1c8e</color>
+    <color name="colorInfoWindow">#0a777c</color>
+    <color name="colorInfoWindowDark">#076166</color>
+    <color name="colorInfoWindowFont">#d0d6d6</color>
 </resources>

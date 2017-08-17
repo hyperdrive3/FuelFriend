@@ -115,7 +115,7 @@ public final class GeneralHelper {
 
     public static String createSnippetText(Double distance) {
         return String.format("%.1f", distance) + " km\n" +
-                String.format("%.2f", 0.05 * distance) + " Litres";
+                String.format("%.2f", 0.05 * distance) + " L";
     }
 
     public static Bitmap getBitmap(int drawableRes, Context context) {
