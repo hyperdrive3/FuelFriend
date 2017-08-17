@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorCarLine">#8e0439</color>
     <color name="colorBikeLine">#006633</color>
-    <color name="colorWalkLine">#0d1c8e</color>
+    <color name="colorWalkLine">#c19100</color>
     <color name="colorInfoWindow">#0a777c</color>
     <color name="colorInfoWindowDark">#076166</color>
     <color name="colorInfoWindowFont">#d0d6d6</color>

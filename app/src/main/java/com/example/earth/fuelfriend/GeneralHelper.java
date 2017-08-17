@@ -64,7 +64,7 @@ public final class GeneralHelper {
         return data;
     }
 
-    public static int getIcon(String transport) {
+    public static int getTransportIcon(String transport) {
 
         switch (transport) {
             case TRANSPORT_BIKE:
@@ -121,7 +121,6 @@ public final class GeneralHelper {
     public static Bitmap getBitmap(int drawableRes, Context context) {
 
         Drawable drawable = context.getDrawable(drawableRes);
-
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         canvas.setBitmap(bitmap);

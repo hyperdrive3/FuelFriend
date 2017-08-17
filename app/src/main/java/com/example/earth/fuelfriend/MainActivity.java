@@ -81,8 +81,8 @@ import static com.example.earth.fuelfriend.GeneralHelper.createSnippetText;
 import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
 import static com.example.earth.fuelfriend.GeneralHelper.downloadUrl;
 import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
-import static com.example.earth.fuelfriend.GeneralHelper.getIcon;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportColor;
+import static com.example.earth.fuelfriend.GeneralHelper.getTransportIcon;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             Marker marker = mMap.addMarker(new MarkerOptions() // Draw markers
-                    .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()), getBaseContext())))
+                    .icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(cm.getTransportMode()), getBaseContext())))
                     .position(new LatLng(cm.getCoordinates().latitude, cm.getCoordinates().longitude))
                     .title(title_text)
                     .snippet(snippet_text));
@@ -710,7 +710,7 @@ public class MainActivity extends AppCompatActivity
 
                             Marker originMarker = googleMapMarkers.get(googleMapMarkers.size() - 1);
                             CustomMarker cm = mMarkerInformation.get(mMarkerInformation.size() - 2);
-                            Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(cm.getTransportMode()), getBaseContext())))
+                            Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(cm.getTransportMode()), getBaseContext())))
                                     .position(new LatLng(origin.latitude, origin.longitude))
                                     .title(createTitleText(cm, dest_geolocation))
                                     .snippet(createSnippetText(convertStringDistanceToDouble(mPolylines.get(origin).getPolylineDistance()))));
@@ -719,7 +719,7 @@ public class MainActivity extends AppCompatActivity
                             googleMapMarkers.remove(googleMapMarkers.size() - 1);
                             googleMapMarkers.add(marker_1);
 
-                            Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getIcon(transport), getBaseContext())))
+                            Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(transport), getBaseContext())))
                                     .position(new LatLng(dest.latitude, dest.longitude))
                                     .title(dest_geolocation)
                                     .snippet("No information on this leg of travel.\nStatus: In Transit"));

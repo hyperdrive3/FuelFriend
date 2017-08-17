@@ -6,23 +6,37 @@ package com.example.earth.fuelfriend;
 
 final class Constants {
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "Marker.db";
-    public static final String MKR_TABLE_NAME = "marker_checkpoints";
-    public static final String MKR_ID = "id"; // PRIMARY KEY
-    public static final String MKR_LAT = "latitude";
-    public static final String MKR_LNG = "longitude";
-    public static final String MKR_DATE = "date_time";
-    public static final String MKR_DISTANCE = "distance";
-    public static final String MKR_GEOLOCATION = "geolocation";
-    public static final String MKR_TRANSPORT = "transport_mode";
+    static final int DATABASE_VERSION = 1;
+    static final String FF_DATABASE_NAME = "fuelfriend.db";
 
-    public static final String TRANSPORT_CAR = "CAR";
-    public static final String TRANSPORT_WALK = "WALK";
-    public static final String TRANSPORT_BIKE = "BIKE";
+    // Marker Table
+    static final String MKR_TABLE_NAME = "marker_checkpoints";
+    static final String MKR_ID = "id"; // PRIMARY KEY
+    static final String MKR_LAT = "latitude";
+    static final String MKR_LNG = "longitude";
+    static final String MKR_DATE = "date_time";
+    static final String MKR_DISTANCE = "distance";
+    static final String MKR_GEOLOCATION = "geolocation";
+    static final String MKR_TRANSPORT = "transport_mode";
 
-    public static final int NOTIFICATION_ID = 1;
-    public static final String ACTION_WALK = "ACTION_WALK";
-    public static final String ACTION_CAR = "ACTION_CAR";
-    public static final String ACTION_BIKE = "ACTION_BIKE";
+    // Transport Table
+    static final String TRANS_TABLE_NAME = "transport_options";
+    static final String TRANS_ID = "id";
+    static final String TRANS_NAME = "car_name";
+    static final String TRANS_MODEL = "car_model";
+    static final String TRANS_MAKE = "car_make";
+    static final String TRANS_YEAR = "year";
+    static final String TRANS_FUEL_PER_KM = "approx_use";
+    static final String TRANS_CAPACITY = "fuel_capacity";
+    static final String TRANS_PLATE = "number_plate";
+
+
+    static final String TRANSPORT_CAR = "CAR";
+    static final String TRANSPORT_WALK = "WALK";
+    static final String TRANSPORT_BIKE = "BIKE";
+
+    static final int NOTIFICATION_ID = 1;
+    static final String ACTION_WALK = "ACTION_WALK";
+    static final String ACTION_CAR = "ACTION_CAR";
+    static final String ACTION_BIKE = "ACTION_BIKE";
 }

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
-import static com.example.earth.fuelfriend.Constants.DATABASE_NAME;
 import static com.example.earth.fuelfriend.Constants.DATABASE_VERSION;
+import static com.example.earth.fuelfriend.Constants.FF_DATABASE_NAME;
 import static com.example.earth.fuelfriend.Constants.MKR_DATE;
 import static com.example.earth.fuelfriend.Constants.MKR_DISTANCE;
 import static com.example.earth.fuelfriend.Constants.MKR_GEOLOCATION;
@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, FF_DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
