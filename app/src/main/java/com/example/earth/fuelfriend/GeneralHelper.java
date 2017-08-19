@@ -21,12 +21,12 @@ import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
  * Created by EARTH on 5/08/2017.
  */
 
-public final class GeneralHelper {
+final class GeneralHelper {
 
     /**
      * A method to download json data from url
      */
-    public static String downloadUrl(String strUrl) throws IOException {
+    static String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
@@ -58,13 +58,14 @@ public final class GeneralHelper {
         } catch (Exception e) {
             Log.d("Exception while downloading url", e.toString());
         } finally {
+            assert iStream != null;
             iStream.close();
             urlConnection.disconnect();
         }
         return data;
     }
 
-    public static int getTransportIcon(String transport) {
+    static int getTransportIcon(String transport) {
 
         switch (transport) {
             case TRANSPORT_BIKE:
@@ -76,7 +77,7 @@ public final class GeneralHelper {
         }
     }
 
-    public static int getTransportColor(String transport, Context context) {
+    static int getTransportColor(String transport, Context context) {
 
         int polyline_color;
         switch (transport) {
@@ -94,12 +95,12 @@ public final class GeneralHelper {
     }
 
     // Expand on this to make it customizible via UI
-    public static double getFuelConsumption(double distance) {
-        return 0.0500 * distance;
+    public static double getFuelConsumption(double distance, double litrePerKm) {
+        return litrePerKm * distance;
     }
 
     // Converts values generated from Google Distance API such as Strings like: 10 m, 133 km, 9,999 km etc. and turns it into usable data
-    public static double convertStringDistanceToDouble(String distance) {
+    static double convertStringDistanceToDouble(String distance) {
         String units = distance.substring(distance.indexOf(" ") + 1, distance.length());
         double number = Double.parseDouble(distance.substring(0, distance.indexOf(" ")));
 
@@ -109,16 +110,16 @@ public final class GeneralHelper {
 
     }
 
-    public static String createTitleText(CustomMarker origin, String dest) {
+    static String createTitleText(CustomMarker origin, String dest) {
         return dest + "|" + origin.getTransportMode();
     }
 
-    public static String createSnippetText(Double distance) {
+    static String createSnippetText(Double distance) {
         return String.format("%.1f", distance) + " km\n" +
                 String.format("%.2f", 0.05 * distance) + " L";
     }
 
-    public static Bitmap getBitmap(int drawableRes, Context context) {
+    static Bitmap getBitmap(int drawableRes, Context context) {
 
         Drawable drawable = context.getDrawable(drawableRes);
         Canvas canvas = new Canvas();
@@ -129,6 +130,19 @@ public final class GeneralHelper {
 
         return bitmap;
     }
+
+    static double gallonsToLitres(double gallons) {
+        return gallons * 3.78541178;
+    }
+
+    static double milesToKm(double miles) {
+        return miles * 1.60934;
+    }
+
+    static double litrePerKm(double gallonRate) {
+        return gallonsToLitres(gallonRate * 100) / milesToKm(100);
+    }
+
 
 
 
