@@ -143,7 +143,4 @@ final class GeneralHelper {
         return gallonsToLitres(gallonRate * 100) / milesToKm(100);
     }
 
-
-
-
 }
