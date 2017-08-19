@@ -90,20 +90,20 @@ public class MainActivity extends AppCompatActivity
         LocationListener {
 
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
     private SupportMapFragment mSupportMapFragment;
+    private SearchFragment mSearchFragment;
     private LocationManager mLocationManager;
     private DBHelper mDatabaseHelper;
     private ArrayList<? extends CustomMarker> mMarkerInformation;
     private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
-    private BroadcastReceiverNotificationActions mActionListner;
 
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        BroadcastReceiverNotificationActions mActionListner = new BroadcastReceiverNotificationActions();
         // dynamically register an instance of this class with Context.registerReceiver() in the manifest
         // as you cannot use the manifest for non-static inner class BroadcastReceiver classes.
         IntentFilter filter = new IntentFilter();
@@ -118,33 +118,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         googleMapMarkers = new ArrayList<>();
-        mActionListner = new BroadcastReceiverNotificationActions();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
+        mSearchFragment = new SearchFragment();
 
-/*        if(savedInstanceState != null) {
-            mPolylines = (HashMap<LatLng, CustomPolyline>) savedInstanceState.getSerializable("polyLineList");
-            mMarkerInformation = savedInstanceState.getParcelableArrayList("mMarkerInformation");
-
-            System.out.println(mPolylines.size() + " IS HASHMAP SIZE");
-            for(CustomMarker cm : mMarkerInformation) {
-                mMap.addPolyline(mPolylines.get(cm.getCoordinates()).getPolyLine());
-            }
-            System.out.println("Restored state");
-
-        }*/
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
-
-
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Fuel Consumption: 23.5 Litres", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -211,57 +190,60 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
         int id = item.getItemId();
 
         if (mSupportMapFragment.isAdded())
-            sFm.beginTransaction().hide(mSupportMapFragment).commit();
+            fragmentManager.beginTransaction().hide(mSupportMapFragment).commit();
+        if (mSearchFragment.isAdded())
+            fragmentManager.beginTransaction().hide(mSearchFragment).commit();
         if (id == R.id.nav_map) {
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
+
         } else if (id == R.id.nav_manage) {
-            sFm.beginTransaction().hide(mSupportMapFragment).commit();
+            System.out.println("CHOOSE DESIGNATED CAR");
         } else if (id == R.id.nav_add) {
+            System.out.println("NAV ADD NEW CAR/SEARCH");
+            // Starts new fragment with listview + search view, adapter that changes with the arraylist of CSV values.
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            if (!mSearchFragment.isAdded())
+                fragmentManager.beginTransaction().add(R.id.content_frame, mSearchFragment).commit();
+            else fragmentManager.beginTransaction().show(mSearchFragment).commit();
 
         } else if (id == R.id.nav_about) {
-            // 1. Instantiate an AlertDialog.Builder with its constructor
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            // 2. Chain together various setter methods to set the dialog characteristics
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Fuel Friend is a UoW COMP477 project designed with the purpose of promoting energy conservation in our every day commutes. " +
                     "At this point in time, the objective is to achieve a relatively complete distance/fuel consumption" +
-                    " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\n Supervised by Mark Apperley")
+                    " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\nSupervised by Mark Apperley")
                     .setTitle("About Fuel Friend");
 
-            // Add the buttons
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
                 }
             });
-            // 3. Get the AlertDialog from create()
             AlertDialog dialog = builder.create();
             dialog.show();
-            if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_bike_marker) {
             setNewTransportMarker(TRANSPORT_BIKE);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_walk_marker) {
             setNewTransportMarker(TRANSPORT_WALK);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_car_marker) {
             setNewTransportMarker(TRANSPORT_CAR);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -270,7 +252,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -328,7 +310,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     handlePolyline(i);
                 } catch (Exception ex) {
-                    System.err.print("WTF HAPPENED?? ERRORED OUT");
+                    System.err.print("WTF HAPPENED?? ERRORED OUT drawing polylines");
                 }
             }
         };
@@ -706,6 +688,7 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void run() {
 
+                            // Updating the 2nd to last marker with new information since new marker added.
                             Marker originMarker = googleMapMarkers.get(googleMapMarkers.size() - 1);
                             CustomMarker cm = mMarkerInformation.get(mMarkerInformation.size() - 2);
                             Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(cm.getTransportMode()), getBaseContext())))
@@ -717,10 +700,11 @@ public class MainActivity extends AppCompatActivity
                             googleMapMarkers.remove(googleMapMarkers.size() - 1);
                             googleMapMarkers.add(marker_1);
 
+                            // New marker with no distance info as its waiting for another marker to be placed.
                             Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(transport), getBaseContext())))
                                     .position(new LatLng(dest.latitude, dest.longitude))
-                                    .title(dest_geolocation)
-                                    .snippet("No information on this leg of travel.\nStatus: In Transit"));
+                                    .title(createTitleText(mMarkerInformation.get(mMarkerInformation.size() - 1), dest_geolocation))
+                                    .snippet("Getting\ndata..."));
 
                             googleMapMarkers.add(marker);
                         }

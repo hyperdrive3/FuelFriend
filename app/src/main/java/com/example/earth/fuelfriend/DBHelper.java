@@ -31,7 +31,6 @@ import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_PER_KM;
 import static com.example.earth.fuelfriend.Constants.TRANS_ID;
 import static com.example.earth.fuelfriend.Constants.TRANS_MAKE;
 import static com.example.earth.fuelfriend.Constants.TRANS_MODEL;
-import static com.example.earth.fuelfriend.Constants.TRANS_PLATE;
 import static com.example.earth.fuelfriend.Constants.TRANS_TABLE_NAME;
 import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
@@ -65,8 +64,7 @@ class DBHelper extends SQLiteOpenHelper {
                 TRANS_MAKE + " TEXT, " +
                 TRANS_CAPACITY + " REAL, " +
                 TRANS_FUEL_PER_KM + " REAL, " +
-                TRANS_YEAR + " REAL, " +
-                TRANS_PLATE + " TEXT)"
+                TRANS_YEAR + " REAL)"
         );
 
         setDefaultLabel(db);
@@ -87,6 +85,19 @@ class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    ArrayList<String> getAllTransport() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TRANS_TABLE_NAME, null);
+
+        ArrayList<String> transport = new ArrayList<>();
+        if (c.moveToFirst()) {
+            do {
+                transport.add(c.getString(c.getColumnIndex(TRANS_YEAR)) + " " + c.getString(c.getColumnIndex(TRANS_MAKE)) + " " + c.getString(c.getColumnIndex(TRANS_MODEL)));
+            } while (c.moveToNext());
+        }
+
+        return transport;
+    }
 
     ArrayList<CustomMarker> getAllMarkers() {
 
@@ -127,7 +138,7 @@ class DBHelper extends SQLiteOpenHelper {
     }
 
     // Putting default transport values in
-    private ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year, String plate) {
+    private ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year) {
 
         ContentValues contentValues = new ContentValues();
 
@@ -136,7 +147,6 @@ class DBHelper extends SQLiteOpenHelper {
         contentValues.put(TRANS_CAPACITY, capacity);
         contentValues.put(TRANS_FUEL_PER_KM, rate);
         contentValues.put(TRANS_YEAR, year);
-        contentValues.put(TRANS_PLATE, plate);
 
         return contentValues;
 
@@ -158,10 +168,10 @@ class DBHelper extends SQLiteOpenHelper {
         }
 
         // LITERS NOT GALLONS
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016, "FRI3ND"));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017, "FU3L"));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017, "F45TC4R"));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017, "CYKABLY7"));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017));
+        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017));
 
     }
 
