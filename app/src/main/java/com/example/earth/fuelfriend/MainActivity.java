@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleMap mMap;
     private SupportMapFragment mSupportMapFragment;
+    private SearchFragment mSearchFragment;
     private LocationManager mLocationManager;
     private DBHelper mDatabaseHelper;
     private ArrayList<? extends CustomMarker> mMarkerInformation;
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity
         googleMapMarkers = new ArrayList<>();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
+        mSearchFragment = new SearchFragment();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
@@ -188,57 +190,60 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        android.support.v4.app.FragmentManager sFm = getSupportFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
         int id = item.getItemId();
 
         if (mSupportMapFragment.isAdded())
-            sFm.beginTransaction().hide(mSupportMapFragment).commit();
+            fragmentManager.beginTransaction().hide(mSupportMapFragment).commit();
+        if (mSearchFragment.isAdded())
+            fragmentManager.beginTransaction().hide(mSearchFragment).commit();
         if (id == R.id.nav_map) {
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
+
         } else if (id == R.id.nav_manage) {
-            sFm.beginTransaction().hide(mSupportMapFragment).commit();
+            System.out.println("CHOOSE DESIGNATED CAR");
         } else if (id == R.id.nav_add) {
+            System.out.println("NAV ADD NEW CAR/SEARCH");
+            // Starts new fragment with listview + search view, adapter that changes with the arraylist of CSV values.
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            if (!mSearchFragment.isAdded())
+                fragmentManager.beginTransaction().add(R.id.content_frame, mSearchFragment).commit();
+            else fragmentManager.beginTransaction().show(mSearchFragment).commit();
 
         } else if (id == R.id.nav_about) {
-            // 1. Instantiate an AlertDialog.Builder with its constructor
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            // 2. Chain together various setter methods to set the dialog characteristics
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Fuel Friend is a UoW COMP477 project designed with the purpose of promoting energy conservation in our every day commutes. " +
                     "At this point in time, the objective is to achieve a relatively complete distance/fuel consumption" +
-                    " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\n Supervised by Mark Apperley")
+                    " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\nSupervised by Mark Apperley")
                     .setTitle("About Fuel Friend");
 
-            // Add the buttons
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
                 }
             });
-            // 3. Get the AlertDialog from create()
             AlertDialog dialog = builder.create();
             dialog.show();
-            if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_bike_marker) {
             setNewTransportMarker(TRANSPORT_BIKE);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_walk_marker) {
             setNewTransportMarker(TRANSPORT_WALK);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         } else if (id == R.id.nav_car_marker) {
             setNewTransportMarker(TRANSPORT_CAR);
             if (!mSupportMapFragment.isAdded())
-                sFm.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else sFm.beginTransaction().show(mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
