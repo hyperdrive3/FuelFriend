@@ -26,7 +26,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        int csvResources[] = {R.raw.vehicles_pt5, R.raw.vehicles_pt2, R.raw.vehicles_pt3, R.raw.vehicles_pt4, R.raw.vehicles_pt1};
+        int csvResources[] = {R.raw.vehicles_pt6, R.raw.vehicles_pt5, R.raw.vehicles_pt2, R.raw.vehicles_pt3, R.raw.vehicles_pt4, R.raw.vehicles_pt1};
 
         View v = inflater.inflate(R.layout.activity_filter_transport, container, false);
         dbHelper = new DBHelper(getContext());
