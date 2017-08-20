@@ -11,12 +11,13 @@
   limitations under the License.
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+    android:shape="oval"
+    android:id="@+id/circle_iw_bg">
     <size
-        android:width="100dp"
-        android:height="100dp" />
-    <stroke
-        android:width="3dp"
-        android:color="@color/colorInfoWindow" />
+        android:width="104dp"
+        android:height="104dp" />
+    <!--<stroke
+        android:width="1dp"
+        android:color="@color/colorInfoWindowFont" />-->
     <solid android:color="@color/colorInfoWindow" />
 </shape>
