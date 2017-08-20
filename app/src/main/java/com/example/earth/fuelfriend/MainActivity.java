@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().hide(mSearchFragment).commit();
         if (id == R.id.nav_map) {
             if (!mSupportMapFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).addToBackStack("").commit();
             else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
 
         } else if (id == R.id.nav_manage) {
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the back stack so the user can navigate back
             if (!mSearchFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.content_frame, mSearchFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.content_frame, mSearchFragment).addToBackStack("").commit();
             else fragmentManager.beginTransaction().show(mSearchFragment).commit();
 
         } else if (id == R.id.nav_about) {
