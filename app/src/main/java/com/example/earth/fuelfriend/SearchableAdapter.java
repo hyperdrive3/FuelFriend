@@ -68,12 +68,15 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        convertView.setTag(R.id.string, filteredData.get(position));
+
+        String line[] = filteredData.get(position).split(",");
         // If weren't re-ordering this you could rely on what you set last time
-        holder.text.setText(filteredData.get(position));
+        holder.text.setText(line[8] + " " + line[4] + " " + line[5]);
         return convertView;
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView text;
     }
 
@@ -97,8 +100,10 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
             String filterableString;
 
             for (int i = 0; i < count; i++) {
+                String dataSplit[] = list.get(i).split(",");
+                String test_filter = dataSplit[8] + " " + dataSplit[4] + " " + dataSplit[5];
                 filterableString = list.get(i);
-                if (filterableString.toLowerCase().contains(filterString)) {
+                if (test_filter.toLowerCase().contains(filterString)) {
                     nlist.add(filterableString);
                 }
             }

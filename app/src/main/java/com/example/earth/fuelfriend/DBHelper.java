@@ -192,6 +192,15 @@ class DBHelper extends SQLiteOpenHelper {
         id = db.insert(MKR_TABLE_NAME, null, contentValues);
     }
 
+    void insertTransport(String vehicle) {
+        String[] vehicleData = vehicle.split(",");
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        // TODO: Finish DB query to input data
+
+    }
+
     void updateEntryDistance(double distance) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
