@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -141,8 +143,16 @@ final class GeneralHelper {
         return miles * 1.60934;
     }
 
-    static double litrePerKm(double gallonRate) {
-        return gallonsToLitres(gallonRate * 100) / milesToKm(100);
+    static double litrePerHundredKm(double milesPerGallon) {
+
+        double first = milesPerGallon * 1.60934;
+        double second = first / 3.78541178;
+        double reciprocal = (1 / second) * 100;
+
+        BigDecimal bd = new BigDecimal(reciprocal);
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
+
+        return bd.doubleValue();
     }
 
     static void displayAboutMessage(Context context) {
