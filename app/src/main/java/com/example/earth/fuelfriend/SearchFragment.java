@@ -20,7 +20,6 @@ import java.util.Scanner;
 public class SearchFragment extends Fragment {
 
     private SearchableAdapter search;
-    ArrayList<String> lv_vehiclelist = new ArrayList<>();
     ArrayList<String> databaseVehicles = new ArrayList<>();
     ArrayList<String> progress = new ArrayList<>();
     ListView lv;
@@ -31,18 +30,16 @@ public class SearchFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        int csvResources[] = {R.raw.vehicles_pt6, R.raw.vehicles_pt5, R.raw.vehicles_pt2, R.raw.vehicles_pt3, R.raw.vehicles_pt4, R.raw.vehicles_pt1};
+        int csvResources[] = {R.raw.vehicles_pt6, R.raw.vehicles_pt5, R.raw.vehicles_pt2/*, R.raw.vehicles_pt3, R.raw.vehicles_pt4, R.raw.vehicles_pt1*/};
 
         if (savedInstanceState != null) {
-            lv_vehiclelist = savedInstanceState.getStringArrayList("lv_vehiclelist");
             databaseVehicles = savedInstanceState.getStringArrayList("databaseVehicles");
             progress = savedInstanceState.getStringArrayList("progress");
         }
 
-
         final View v = inflater.inflate(R.layout.search_transport, container, false);
         dbHelper = new DBHelper(getContext());
-        search = new SearchableAdapter(getContext(), lv_vehiclelist);
+        search = new SearchableAdapter(getContext(), databaseVehicles);
         SearchView sv = (SearchView) v.findViewById(R.id.search_input);
         lv = (ListView) v.findViewById(R.id.transport_list);
 
@@ -52,7 +49,7 @@ public class SearchFragment extends Fragment {
 
                 CarProfileFragment cpf = new CarProfileFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("data", databaseVehicles.get(i));
+                bundle.putString("data", (String) view.getTag(R.id.string));
                 cpf.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFm();
@@ -91,25 +88,18 @@ public class SearchFragment extends Fragment {
         return getFragmentManager();
     }
 
-    public void hide() {
-        getFragmentManager().beginTransaction().hide(this).commit();
-    }
-
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        System.out.println("SAVED STATE");
         outState.putStringArrayList("progress", progress);
         outState.putStringArrayList("databaseVehicles", databaseVehicles);
-        outState.putStringArrayList("lv_vehiclelist", lv_vehiclelist);
         super.onSaveInstanceState(outState);
     }
 
     private class LoadCSVTask extends AsyncTask<InputStream, Integer, Long> {
 
         private int file_id;
-        private ArrayList<String> original_list = new ArrayList<>(), readingVehicleFile = new ArrayList<>();
+        private ArrayList<String> readingVehicleFile = new ArrayList<>();
 
         public LoadCSVTask(int id) {
             file_id = id;
@@ -126,12 +116,9 @@ public class SearchFragment extends Fragment {
             while (inputStream.hasNext()) {
                 lineNumber++;
                 String nextLine = inputStream.nextLine();
-                String[] line = nextLine.split(","); // Splits the line up into a string array
-                if (line.length == 10 && line[8].matches("-?\\d+(\\.\\d+)?")) {
-                    original_list.add(line[8] + " " + line[4] + " " + line[5]);
+                String[] line = nextLine.split(",");
+                if (line.length == 10 && line[8].matches("-?\\d+(\\.\\d+)?"))
                     readingVehicleFile.add(nextLine);
-                }
-
             }
             progress.add(Integer.toString(file_id));
             inputStream.close();
@@ -145,10 +132,8 @@ public class SearchFragment extends Fragment {
 
         //This method is triggered at the end of the process, in your case when the loading has finished
         protected void onPostExecute(Long result) {
-
             databaseVehicles.addAll(readingVehicleFile);
-            lv_vehiclelist.addAll(original_list);
-            search.setOriginalData(lv_vehiclelist);
+            search.setOriginalData(databaseVehicles);
         }
     }
 
