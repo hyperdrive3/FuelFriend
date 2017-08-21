@@ -42,7 +42,7 @@ public class CarProfileFragment extends Fragment {
         tv_vclass.setText(data[7]);
         tv_trans.setText(data[6]);
         tv_dtrain.setText(data[1]);
-        tv_fuelrate.setText(data[0]);
+        tv_fuelrate.setText(Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[0]))) + " Litres/100km");
         tv_fueltype.setText(data[3]);
         tv_costs.setText(data[2]);
         tv_savings.setText(data[9]);
