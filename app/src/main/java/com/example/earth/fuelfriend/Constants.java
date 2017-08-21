@@ -22,13 +22,17 @@ final class Constants {
     // Transport Table
     static final String TRANS_TABLE_NAME = "transport_options";
     static final String TRANS_ID = "id";
-    static final String TRANS_NAME = "car_name";
     static final String TRANS_MODEL = "car_model";
     static final String TRANS_MAKE = "car_make";
     static final String TRANS_YEAR = "year";
     static final String TRANS_FUEL_PER_KM = "approx_use";
     static final String TRANS_CAPACITY = "fuel_capacity";
-    static final String TRANS_PLATE = "number_plate";
+    static final String TRANS_CLASS = "vehicle_class";
+    static final String TRANS_TRANSMISSION = "transmission";
+    static final String TRANS_DRIVETRAIN = "drive_train";
+    static final String TRANS_FUEL_TYPE = "fuel_type";
+    static final String TRANS_ANNUAL_COST = "annual_cost";
+    static final String TRANS_ANNUAL_SAVING = "annual_saving";
 
 
     static final String TRANSPORT_CAR = "CAR";
