@@ -1,6 +1,8 @@
 package com.example.earth.fuelfriend;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -141,6 +143,22 @@ final class GeneralHelper {
 
     static double litrePerKm(double gallonRate) {
         return gallonsToLitres(gallonRate * 100) / milesToKm(100);
+    }
+
+    static void displayAboutMessage(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Fuel Friend is a UoW COMP477 project designed with the purpose of promoting energy conservation in our every day commutes. " +
+                "At this point in time, the objective is to achieve a relatively complete distance/fuel consumption" +
+                " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\nSupervised by Mark Apperley")
+                .setTitle("About Fuel Friend");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 }

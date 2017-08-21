@@ -11,11 +11,9 @@ Supervised by Mark Appereley
 
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -31,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -79,6 +78,7 @@ import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
 import static com.example.earth.fuelfriend.GeneralHelper.convertStringDistanceToDouble;
 import static com.example.earth.fuelfriend.GeneralHelper.createSnippetText;
 import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
+import static com.example.earth.fuelfriend.GeneralHelper.displayAboutMessage;
 import static com.example.earth.fuelfriend.GeneralHelper.downloadUrl;
 import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportColor;
@@ -117,9 +117,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack("root", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
         googleMapMarkers = new ArrayList<>();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
+        mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
@@ -134,7 +137,6 @@ public class MainActivity extends AppCompatActivity
         //Notification method
         mActionListner.createNotificationIntents(R.drawable.ic_gas_petrol_24dp_white, R.drawable.blank_icon_small, getBaseContext());
 
-        mSupportMapFragment.getMapAsync(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -150,21 +152,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-/*        outState.putParcelableArrayList("mMarkerInformation", (ArrayList<? extends Parcelable>) mMarkerInformation);
-        System.out.println("Size of saved Polylines " + mPolylines.size());
-        outState.putSerializable("mPolylines", mPolylines);*/
-        // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -186,69 +174,68 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    FragmentManager fragmentManager = getSupportFragmentManager();
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
-        int id = item.getItemId();
+/*        if (!mSupportMapFragment.isAdded())
+            fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
+        if (!mSearchFragment.isAdded())
+            fragmentManager.beginTransaction().add(R.id.map, mSearchFragment).commit();*/
 
-        if (mSupportMapFragment.isAdded())
-            fragmentManager.beginTransaction().hide(mSupportMapFragment).commit();
-        if (mSearchFragment.isAdded())
-            fragmentManager.beginTransaction().hide(mSearchFragment).commit();
-        if (id == R.id.nav_map) {
-            if (!mSupportMapFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).addToBackStack("").commit();
-            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
+        switch (item.getItemId()) {
+            case R.id.nav_map:
+                fragmentManager.beginTransaction().replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
+                break;
 
-        } else if (id == R.id.nav_manage) {
-            System.out.println("CHOOSE DESIGNATED CAR");
-        } else if (id == R.id.nav_add) {
-            System.out.println("NAV ADD NEW CAR/SEARCH");
-            // Starts new fragment with listview + search view, adapter that changes with the arraylist of CSV values.
+            case R.id.nav_manage:
+                System.out.println("CHOOSE DESIGNATED CAR");
+                break;
 
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            if (!mSearchFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.content_frame, mSearchFragment).addToBackStack("").commit();
-            else fragmentManager.beginTransaction().show(mSearchFragment).commit();
+            case R.id.nav_add:
+                fragmentManager.beginTransaction().replace(R.id.content_frame, mSearchFragment).addToBackStack("search").commit();
+                break;
 
-        } else if (id == R.id.nav_about) {
+            case R.id.nav_about:
+                displayAboutMessage(this);
+                break;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Fuel Friend is a UoW COMP477 project designed with the purpose of promoting energy conservation in our every day commutes. " +
-                    "At this point in time, the objective is to achieve a relatively complete distance/fuel consumption" +
-                    " application utilizing the Android Google Maps API." + "\n\n" + "Created by James Wong(1228302) \n\nSupervised by Mark Apperley")
-                    .setTitle("About Fuel Friend");
+            case R.id.nav_walk_marker:
+                setNewTransportMarker(TRANSPORT_WALK);
+                break;
 
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        } else if (id == R.id.nav_bike_marker) {
-            setNewTransportMarker(TRANSPORT_BIKE);
-            if (!mSupportMapFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
-        } else if (id == R.id.nav_walk_marker) {
-            setNewTransportMarker(TRANSPORT_WALK);
-            if (!mSupportMapFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
-        } else if (id == R.id.nav_car_marker) {
-            setNewTransportMarker(TRANSPORT_CAR);
-            if (!mSupportMapFragment.isAdded())
-                fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-            else fragmentManager.beginTransaction().show(mSupportMapFragment).commit();
+            case R.id.nav_car_marker:
+                setNewTransportMarker(TRANSPORT_CAR);
+                break;
+
+            case R.id.nav_bike_marker:
+                setNewTransportMarker(TRANSPORT_BIKE);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            boolean ples = fragmentManager.popBackStackImmediate("map", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            //fragmentManager.beginTransaction().replace(R.id.map, getSupportFragmentManager().findFragmentByTag("map")).commit();
+            System.out.println("Got last fragment = " + " " + getSupportFragmentManager().getBackStackEntryCount());
+
+        } else {
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        }
+        super.onBackPressed();
     }
 
     protected void buildGoogleApiClient() {
@@ -571,7 +558,6 @@ public class MainActivity extends AppCompatActivity
             String duration = "";
 
             if (result.size() < 1) {
-                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
                 return;
             }
 
