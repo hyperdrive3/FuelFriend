@@ -76,12 +76,12 @@ public class SearchableAdapter extends BaseAdapter implements Filterable {
         return convertView;
     }
 
-    private static class ViewHolder {
-        TextView text;
-    }
-
     public Filter getFilter() {
         return mFilter;
+    }
+
+    private static class ViewHolder {
+        TextView text;
     }
 
     private class ItemFilter extends Filter {
