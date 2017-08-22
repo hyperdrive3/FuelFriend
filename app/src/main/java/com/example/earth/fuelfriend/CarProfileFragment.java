@@ -15,14 +15,17 @@ import android.widget.TextView;
 
 public class CarProfileFragment extends Fragment {
 
-
     private String data[];
+    private DBHelper dbHelper;
+    private boolean inDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        dbHelper = new DBHelper(getContext());
         data = getArguments().getString("data").split(",");
+        inDatabase = dbHelper.checkIfTransportInDb(data[4], data[5]);
 
         View v = inflater.inflate(R.layout.vehicle_profile, container, false);
         TextView tv_year = (TextView) v.findViewById(R.id.year);
@@ -55,26 +58,39 @@ public class CarProfileFragment extends Fragment {
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                remove();
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, fm.getFragments().get(1)).commit(); // i dont know why this works
+                destroyThisFragment();
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, fm.getFragments().get(1)).commit(); // Go back to the previous fragment
             }
         });
 
+        removeOrAdd(addRemove);
         addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBHelper dbHelper = new DBHelper(getContext());
-                dbHelper.insertTransport(data[4], data[5], data[8], data[7], data[6], data[1],
-                        Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[0]))),
-                        data[3], data[2], data[9]);
-
+                if (!inDatabase) {
+                    dbHelper.insertTransport(data[4], data[5], data[8], data[7], data[6], data[1],
+                            Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[0]))),
+                            data[3], data[2], data[9]);
+                } else {
+                    dbHelper.removeTransport(data[4], data[5]);
+                }
+                inDatabase = !inDatabase;
+                removeOrAdd((Button) view.findViewById(R.id.add_remove));
             }
         });
 
         return v;
     }
 
-    public void remove() {
+    // Changes button text to remove or add if the viewed car is in the database or not
+    public void removeOrAdd(Button addRemove) {
+        if (inDatabase) {
+            addRemove.setText(R.string.remove_vehicle);
+        } else
+            addRemove.setText(R.string.add_vehicle);
+    }
+
+    public void destroyThisFragment() {
         getFragmentManager().beginTransaction().remove(this).commit();
     }
 }
