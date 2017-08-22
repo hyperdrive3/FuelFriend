@@ -95,7 +95,6 @@ public class CarProfileFragment extends Fragment {
             addRemove.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
             addRemove.setText(R.string.add_vehicle);
         }
-
     }
 
     public void destroyThisFragment() {
