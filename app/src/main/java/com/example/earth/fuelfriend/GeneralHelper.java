@@ -153,9 +153,7 @@ final class GeneralHelper {
         double reciprocal = (1 / second) * 100;
 
         BigDecimal bd = new BigDecimal(reciprocal);
-        bd = bd.setScale(3, RoundingMode.HALF_UP);
-
-        return bd.doubleValue();
+        return bd.setScale(3, RoundingMode.HALF_UP).doubleValue();
     }
 
     static void displayAboutMessage(Context context) {
