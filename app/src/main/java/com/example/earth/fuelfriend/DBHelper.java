@@ -66,11 +66,15 @@ class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + TRANS_TABLE_NAME + "(" +
                 TRANS_ID + " INTEGER PRIMARY KEY, " +
+                TRANS_YEAR + " REAL, " +
                 TRANS_MODEL + " TEXT, " +
-                TRANS_MAKE + " TEXT, " +
-                TRANS_CAPACITY + " REAL, " +
+                TRANS_CLASS + " TEXT, " +
+                TRANS_TRANSMISSION + " TEXT, " +
+                TRANS_DRIVETRAIN + " TEXT, " +
                 TRANS_FUEL_PER_KM + " REAL, " +
-                TRANS_YEAR + " REAL)"
+                TRANS_FUEL_TYPE + " TEXT, " +
+                TRANS_ANNUAL_COST + " REAL, " +
+                TRANS_ANNUAL_SAVING + " REAL)"
         );
 
         setDefaultLabel(db);
@@ -174,11 +178,11 @@ class DBHelper extends SQLiteOpenHelper {
         }
 
         // LITERS NOT GALLONS
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016));
+       /* db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016));
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017));
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017));
         db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017));
-
+*/
     }
 
     private long id;
