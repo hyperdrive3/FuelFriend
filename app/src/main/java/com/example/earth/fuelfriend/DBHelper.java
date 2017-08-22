@@ -26,12 +26,18 @@ import static com.example.earth.fuelfriend.Constants.MKR_TRANSPORT;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
+import static com.example.earth.fuelfriend.Constants.TRANS_ANNUAL_COST;
+import static com.example.earth.fuelfriend.Constants.TRANS_ANNUAL_SAVING;
 import static com.example.earth.fuelfriend.Constants.TRANS_CAPACITY;
+import static com.example.earth.fuelfriend.Constants.TRANS_CLASS;
+import static com.example.earth.fuelfriend.Constants.TRANS_DRIVETRAIN;
 import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_PER_KM;
+import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_TYPE;
 import static com.example.earth.fuelfriend.Constants.TRANS_ID;
 import static com.example.earth.fuelfriend.Constants.TRANS_MAKE;
 import static com.example.earth.fuelfriend.Constants.TRANS_MODEL;
 import static com.example.earth.fuelfriend.Constants.TRANS_TABLE_NAME;
+import static com.example.earth.fuelfriend.Constants.TRANS_TRANSMISSION;
 import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
 /**
@@ -125,30 +131,30 @@ class DBHelper extends SQLiteOpenHelper {
     private ContentValues createMarkerDbEntry(LatLng l, String transport, String date) {
 
         Random r = new Random();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(MKR_LAT, l.latitude);
-        contentValues.put(MKR_LNG, l.longitude);
-        contentValues.put(MKR_DATE, date);
-        contentValues.put(MKR_DISTANCE, 1 + (22 - 1) * r.nextDouble());
-        contentValues.put(MKR_GEOLOCATION, "Hamilton City");
-        contentValues.put(MKR_TRANSPORT, transport);
+        cv.put(MKR_LAT, l.latitude);
+        cv.put(MKR_LNG, l.longitude);
+        cv.put(MKR_DATE, date);
+        cv.put(MKR_DISTANCE, 1 + (22 - 1) * r.nextDouble());
+        cv.put(MKR_GEOLOCATION, "Hamilton City");
+        cv.put(MKR_TRANSPORT, transport);
 
-        return contentValues;
+        return cv;
     }
 
     // Putting default transport values in
     private ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year) {
 
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(TRANS_MAKE, make);
-        contentValues.put(TRANS_MODEL, model);
-        contentValues.put(TRANS_CAPACITY, capacity);
-        contentValues.put(TRANS_FUEL_PER_KM, rate);
-        contentValues.put(TRANS_YEAR, year);
+        cv.put(TRANS_MAKE, make);
+        cv.put(TRANS_MODEL, model);
+        cv.put(TRANS_CAPACITY, capacity);
+        cv.put(TRANS_FUEL_PER_KM, rate);
+        cv.put(TRANS_YEAR, year);
 
-        return contentValues;
+        return cv;
 
     }
 
@@ -180,24 +186,36 @@ class DBHelper extends SQLiteOpenHelper {
     void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
 
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(MKR_LAT, location.latitude);
-        contentValues.put(MKR_LNG, location.longitude);
-        contentValues.put(MKR_TRANSPORT, transport);
-        contentValues.put(MKR_DATE, date_time);
-        contentValues.put(MKR_GEOLOCATION, geo_location);
-        contentValues.put(MKR_DISTANCE, 0);
+        cv.put(MKR_LAT, location.latitude);
+        cv.put(MKR_LNG, location.longitude);
+        cv.put(MKR_TRANSPORT, transport);
+        cv.put(MKR_DATE, date_time);
+        cv.put(MKR_GEOLOCATION, geo_location);
+        cv.put(MKR_DISTANCE, 0);
 
-        id = db.insert(MKR_TABLE_NAME, null, contentValues);
+        id = db.insert(MKR_TABLE_NAME, null, cv);
     }
 
-    void insertTransport(String vehicle) {
-        String[] vehicleData = vehicle.split(",");
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+    void insertTransport(String make, String model, String year, String vclass, String transmission,
+                         String dtrain, String fuelrate, String fueltype, String costs, String savings) {
 
-        // TODO: Finish DB query to input data
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(TRANS_MAKE, make);
+        cv.put(TRANS_MODEL, model);
+        cv.put(TRANS_YEAR, year);
+        cv.put(TRANS_CLASS, vclass);
+        cv.put(TRANS_TRANSMISSION, transmission);
+        cv.put(TRANS_DRIVETRAIN, dtrain);
+        cv.put(TRANS_FUEL_PER_KM, fuelrate);
+        cv.put(TRANS_FUEL_TYPE, fueltype);
+        cv.put(TRANS_ANNUAL_COST, costs);
+        cv.put(TRANS_ANNUAL_SAVING, savings);
+
+        db.insert(TRANS_TABLE_NAME, null, cv);
 
     }
 
