@@ -16,15 +16,15 @@ import android.widget.TextView;
 public class CarProfileFragment extends Fragment {
 
 
-    View v;
+    private String data[];
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String data[] = getArguments().getString("data").split(",");
+        data = getArguments().getString("data").split(",");
 
-        v = inflater.inflate(R.layout.vehicle_profile, container, false);
+        View v = inflater.inflate(R.layout.vehicle_profile, container, false);
         TextView tv_year = (TextView) v.findViewById(R.id.year);
         TextView tv_make = (TextView) v.findViewById(R.id.make);
         TextView tv_model = (TextView) v.findViewById(R.id.model);
@@ -63,7 +63,11 @@ public class CarProfileFragment extends Fragment {
         addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Add new DB entry and check if already in DB");
+                DBHelper dbHelper = new DBHelper(getContext());
+                dbHelper.insertTransport(data[4], data[5], data[8], data[7], data[6], data[1],
+                        Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[0]))),
+                        data[3], data[2], data[9]);
+
             }
         });
 
