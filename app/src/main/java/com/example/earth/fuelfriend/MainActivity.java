@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         mSupportMapFragment = SupportMapFragment.newInstance();
         mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
-        mGarageFragment = GarageFragment.newInstance();
+        mGarageFragment = new GarageFragment();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
