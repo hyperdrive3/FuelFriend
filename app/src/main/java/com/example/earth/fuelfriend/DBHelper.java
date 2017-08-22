@@ -181,6 +181,7 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put(MKR_DISTANCE, 0);
 
         id = db.insert(MKR_TABLE_NAME, null, cv);
+        db.close();
     }
 
     int insertTransport(String make, String model, String year, String vclass, String transmission,
@@ -200,7 +201,9 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put(TRANS_ANNUAL_COST, costs);
         cv.put(TRANS_ANNUAL_SAVING, savings);
 
-        return (int) db.insert(TRANS_TABLE_NAME, null, cv);
+        int insert = (int) db.insert(TRANS_TABLE_NAME, null, cv);
+        db.close();
+        return insert;
     }
 
     // Update to remove with more information, copy checkifintransportDb
@@ -235,6 +238,7 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put(MKR_DISTANCE, distance);
 
         db.update(MKR_TABLE_NAME, cv, MKR_ID + "=?", new String[]{String.valueOf(id)});
+        db.close();
     }
 
     boolean checkIfTransportInDb(String make, String model, String year,
