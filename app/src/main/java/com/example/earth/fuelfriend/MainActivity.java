@@ -191,6 +191,13 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_add:
+
+                if (mSearchFragment.getArguments() == null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("searchFragment", "searchFragment");
+                    mSearchFragment.setArguments(bundle);
+                }
+
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mSearchFragment).addToBackStack("search").commit();
                 break;
 

@@ -19,12 +19,11 @@ import java.util.Scanner;
 
 public class SearchFragment extends Fragment {
 
-    private SearchableAdapter search;
     ArrayList<String> databaseVehicles = new ArrayList<>();
     ArrayList<String> progress = new ArrayList<>();
     ListView lv;
     DBHelper dbHelper;
-
+    private SearchableAdapter search;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
