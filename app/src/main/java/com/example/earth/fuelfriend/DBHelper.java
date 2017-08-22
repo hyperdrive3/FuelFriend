@@ -26,16 +26,23 @@ import static com.example.earth.fuelfriend.Constants.MKR_TRANSPORT;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
-import static com.example.earth.fuelfriend.Constants.TRANS_CAPACITY;
+import static com.example.earth.fuelfriend.Constants.TRANS_ANNUAL_COST;
+import static com.example.earth.fuelfriend.Constants.TRANS_ANNUAL_SAVING;
+import static com.example.earth.fuelfriend.Constants.TRANS_CLASS;
+import static com.example.earth.fuelfriend.Constants.TRANS_DRIVETRAIN;
 import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_PER_KM;
+import static com.example.earth.fuelfriend.Constants.TRANS_FUEL_TYPE;
 import static com.example.earth.fuelfriend.Constants.TRANS_ID;
 import static com.example.earth.fuelfriend.Constants.TRANS_MAKE;
 import static com.example.earth.fuelfriend.Constants.TRANS_MODEL;
 import static com.example.earth.fuelfriend.Constants.TRANS_TABLE_NAME;
+import static com.example.earth.fuelfriend.Constants.TRANS_TRANSMISSION;
 import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
 /**
  * Created by EARTH on 2/08/2017.
+ * <p>
+ * NOTE: Value must be enclosed with ''
  */
 
 class DBHelper extends SQLiteOpenHelper {
@@ -49,22 +56,27 @@ class DBHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + MKR_TABLE_NAME + "(" +
-                    MKR_ID + " INTEGER PRIMARY KEY, " +
-                    MKR_LAT + " REAL, " +
-                    MKR_LNG + " REAL, " +
-                    MKR_DATE + " TEXT, " +
-                    MKR_DISTANCE + " REAL, " +
-                    MKR_GEOLOCATION + " TEXT, " +
-                    MKR_TRANSPORT + " TEXT)"
-                 );
+                MKR_ID + " INTEGER PRIMARY KEY, " +
+                MKR_LAT + " REAL, " +
+                MKR_LNG + " REAL, " +
+                MKR_DATE + " TEXT, " +
+                MKR_DISTANCE + " REAL, " +
+                MKR_GEOLOCATION + " TEXT, " +
+                MKR_TRANSPORT + " TEXT)"
+        );
 
         db.execSQL("CREATE TABLE " + TRANS_TABLE_NAME + "(" +
                 TRANS_ID + " INTEGER PRIMARY KEY, " +
-                TRANS_MODEL + " TEXT, " +
+                TRANS_YEAR + " REAL, " +
                 TRANS_MAKE + " TEXT, " +
-                TRANS_CAPACITY + " REAL, " +
+                TRANS_MODEL + " TEXT, " +
+                TRANS_CLASS + " TEXT, " +
+                TRANS_TRANSMISSION + " TEXT, " +
+                TRANS_DRIVETRAIN + " TEXT, " +
                 TRANS_FUEL_PER_KM + " REAL, " +
-                TRANS_YEAR + " REAL)"
+                TRANS_FUEL_TYPE + " TEXT, " +
+                TRANS_ANNUAL_COST + " REAL, " +
+                TRANS_ANNUAL_SAVING + " REAL)"
         );
 
         setDefaultLabel(db);
@@ -95,7 +107,7 @@ class DBHelper extends SQLiteOpenHelper {
                 transport.add(c.getString(c.getColumnIndex(TRANS_YEAR)) + " " + c.getString(c.getColumnIndex(TRANS_MAKE)) + " " + c.getString(c.getColumnIndex(TRANS_MODEL)));
             } while (c.moveToNext());
         }
-
+        System.out.println("SIZE OF THE TRANSPORT TABLE = " + transport.size());
         return transport;
     }
 
@@ -125,53 +137,32 @@ class DBHelper extends SQLiteOpenHelper {
     private ContentValues createMarkerDbEntry(LatLng l, String transport, String date) {
 
         Random r = new Random();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(MKR_LAT, l.latitude);
-        contentValues.put(MKR_LNG, l.longitude);
-        contentValues.put(MKR_DATE, date);
-        contentValues.put(MKR_DISTANCE, 1 + (22 - 1) * r.nextDouble());
-        contentValues.put(MKR_GEOLOCATION, "Hamilton City");
-        contentValues.put(MKR_TRANSPORT, transport);
+        cv.put(MKR_LAT, l.latitude);
+        cv.put(MKR_LNG, l.longitude);
+        cv.put(MKR_DATE, date);
+        cv.put(MKR_DISTANCE, 1 + (22 - 1) * r.nextDouble());
+        cv.put(MKR_GEOLOCATION, "Hamilton City");
+        cv.put(MKR_TRANSPORT, transport);
 
-        return contentValues;
-    }
-
-    // Putting default transport values in
-    private ContentValues createTransportDbEntry(String make, String model, double capacity, double rate, double year) {
-
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(TRANS_MAKE, make);
-        contentValues.put(TRANS_MODEL, model);
-        contentValues.put(TRANS_CAPACITY, capacity);
-        contentValues.put(TRANS_FUEL_PER_KM, rate);
-        contentValues.put(TRANS_YEAR, year);
-
-        return contentValues;
-
+        return cv;
     }
 
     private void setDefaultLabel(SQLiteDatabase db) {
         // create default label
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String currentDateandTime = sdf.format(new Date());
-        for(int i = 0; i < latLngArrayList.size(); i++) {
+        for (int i = 0; i < latLngArrayList.size(); i++) {
 
             LatLng l = latLngArrayList.get(i);
-            if(i == 2 || i == 5)
+            if (i == 2 || i == 5)
                 db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_WALK, currentDateandTime));
-            else if(i == 4 || i == 6){
+            else if (i == 4 || i == 6) {
                 db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_BIKE, currentDateandTime));
-            }else
+            } else
                 db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_CAR, currentDateandTime));
         }
-
-        // LITERS NOT GALLONS
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017));
 
     }
 
@@ -180,25 +171,62 @@ class DBHelper extends SQLiteOpenHelper {
     void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
 
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        contentValues.put(MKR_LAT, location.latitude);
-        contentValues.put(MKR_LNG, location.longitude);
-        contentValues.put(MKR_TRANSPORT, transport);
-        contentValues.put(MKR_DATE, date_time);
-        contentValues.put(MKR_GEOLOCATION, geo_location);
-        contentValues.put(MKR_DISTANCE, 0);
+        cv.put(MKR_LAT, location.latitude);
+        cv.put(MKR_LNG, location.longitude);
+        cv.put(MKR_TRANSPORT, transport);
+        cv.put(MKR_DATE, date_time);
+        cv.put(MKR_GEOLOCATION, geo_location);
+        cv.put(MKR_DISTANCE, 0);
 
-        id = db.insert(MKR_TABLE_NAME, null, contentValues);
+        id = db.insert(MKR_TABLE_NAME, null, cv);
     }
 
-    void insertTransport(String vehicle) {
-        String[] vehicleData = vehicle.split(",");
+    int insertTransport(String make, String model, String year, String vclass, String transmission,
+                        String dtrain, String fuelrate, String fueltype, String costs, String savings) {
+
         SQLiteDatabase db = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        ContentValues cv = new ContentValues();
 
-        // TODO: Finish DB query to input data
+        cv.put(TRANS_MAKE, make);
+        cv.put(TRANS_MODEL, model);
+        cv.put(TRANS_YEAR, year);
+        cv.put(TRANS_CLASS, vclass);
+        cv.put(TRANS_TRANSMISSION, transmission);
+        cv.put(TRANS_DRIVETRAIN, dtrain);
+        cv.put(TRANS_FUEL_PER_KM, fuelrate);
+        cv.put(TRANS_FUEL_TYPE, fueltype);
+        cv.put(TRANS_ANNUAL_COST, costs);
+        cv.put(TRANS_ANNUAL_SAVING, savings);
 
+        return (int) db.insert(TRANS_TABLE_NAME, null, cv);
+    }
+
+    // Update to remove with more information, copy checkifintransportDb
+    int removeTransport(String make, String model, String year,
+                        String vclass, String transmission,
+                        String dtrain, String fuelrate, String fueltype,
+                        String costs, String savings) {
+        getAllTransport();
+        SQLiteDatabase db = getWritableDatabase();
+        int status = db.delete(TRANS_TABLE_NAME,
+                TRANS_MAKE + "=? AND " +
+                        TRANS_MODEL + "=? AND " +
+                        TRANS_YEAR + "=? AND " +
+                        TRANS_CLASS + "=? AND " +
+                        TRANS_TRANSMISSION + "=? AND " +
+                        TRANS_DRIVETRAIN + "=? AND " +
+                        TRANS_FUEL_PER_KM + "=? AND " +
+                        TRANS_FUEL_TYPE + "=? AND " +
+                        TRANS_ANNUAL_COST + "=? AND " +
+                        TRANS_ANNUAL_SAVING + "=?",
+                new String[]{make, model, year, vclass, transmission, dtrain, fuelrate, fueltype, costs, savings});
+
+        System.out.println(make + " " + model + " " + year + " " + vclass + " " + transmission + " " + dtrain + " " + fuelrate + " " + fueltype + " " + costs + " " + savings);
+        getAllTransport();
+        db.close();
+        return status;
     }
 
     void updateEntryDistance(double distance) {
@@ -206,7 +234,34 @@ class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(MKR_DISTANCE, distance);
 
-        db.update(MKR_TABLE_NAME, cv, MKR_ID + "=?", new String[] {String.valueOf(id)});
+        db.update(MKR_TABLE_NAME, cv, MKR_ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    boolean checkIfTransportInDb(String make, String model, String year,
+                                 String vclass, String transmission,
+                                 String dtrain, String fuelrate, String fueltype,
+                                 String costs, String savings) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String Query = "SELECT * FROM " + TRANS_TABLE_NAME + " WHERE "
+                + TRANS_MAKE + " = '" + make + "' AND "
+                + TRANS_MODEL + " = '" + model + "' AND "
+                + TRANS_YEAR + " = '" + year + "' AND "
+                + TRANS_CLASS + " = '" + vclass + "' AND "
+                + TRANS_TRANSMISSION + " = '" + transmission + "' AND "
+                + TRANS_DRIVETRAIN + " = '" + dtrain + "' AND "
+                + TRANS_FUEL_PER_KM + " = '" + fuelrate + "' AND "
+                + TRANS_FUEL_TYPE + " = '" + fueltype + "' AND "
+                + TRANS_ANNUAL_COST + " = '" + costs + "' AND "
+                + TRANS_ANNUAL_SAVING + " = '" + savings + "'";
+
+        Cursor cursor = db.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 
     private static final String SQL_DELETE_ENTRIES =
@@ -218,6 +273,7 @@ class DBHelper extends SQLiteOpenHelper {
         //db.execSQL(SQL_DELETE_ENTRIES);
         //onCreate(db);
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }

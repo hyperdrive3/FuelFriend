@@ -9,22 +9,38 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import static com.example.earth.fuelfriend.Constants.CLASS;
+import static com.example.earth.fuelfriend.Constants.COSTS;
+import static com.example.earth.fuelfriend.Constants.MAKE;
+import static com.example.earth.fuelfriend.Constants.MODEL;
+import static com.example.earth.fuelfriend.Constants.RATE;
+import static com.example.earth.fuelfriend.Constants.SAVINGS;
+import static com.example.earth.fuelfriend.Constants.TRAIN;
+import static com.example.earth.fuelfriend.Constants.TRANSMISSION;
+import static com.example.earth.fuelfriend.Constants.TYPE;
+import static com.example.earth.fuelfriend.Constants.YEAR;
+
 /**
  * Created by EARTH on 20/08/2017.
  */
 
 public class CarProfileFragment extends Fragment {
 
-
-    View v;
+    private String data[];
+    private DBHelper dbHelper;
+    private boolean inDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        String data[] = getArguments().getString("data").split(",");
+        dbHelper = new DBHelper(getContext());
+        data = getArguments().getString("data").split(",");
+        inDatabase = dbHelper.checkIfTransportInDb(data[MAKE], data[MODEL], data[YEAR], data[CLASS], data[TRANSMISSION], data[TRAIN],
+                Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))),
+                data[TYPE], data[COSTS], data[SAVINGS]);
 
-        v = inflater.inflate(R.layout.vehicle_profile, container, false);
+        View v = inflater.inflate(R.layout.vehicle_profile, container, false);
         TextView tv_year = (TextView) v.findViewById(R.id.year);
         TextView tv_make = (TextView) v.findViewById(R.id.make);
         TextView tv_model = (TextView) v.findViewById(R.id.model);
@@ -36,41 +52,68 @@ public class CarProfileFragment extends Fragment {
         TextView tv_costs = (TextView) v.findViewById(R.id.annual_cost);
         TextView tv_savings = (TextView) v.findViewById(R.id.annual_savings);
 
-        tv_make.setText(data[4]);
-        tv_model.setText(data[5]);
-        tv_year.setText(data[8]);
-        tv_vclass.setText(data[7]);
-        tv_trans.setText(data[6]);
-        tv_dtrain.setText(data[1]);
-        tv_fuelrate.setText(Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[0]))) + " Litres/100km");
-        tv_fueltype.setText(data[3]);
-        tv_costs.setText(data[2]);
-        tv_savings.setText(data[9]);
+        tv_make.setText(data[MAKE]);
+        tv_model.setText(data[MODEL]);
+        tv_year.setText(data[YEAR]);
+        tv_vclass.setText(data[CLASS]);
+        tv_trans.setText(data[TRANSMISSION]);
+        tv_dtrain.setText(data[TRAIN]);
+        tv_fuelrate.setText(Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))) + " Litres/100km");
+        tv_fueltype.setText(data[TYPE]);
+        tv_costs.setText(data[COSTS]);
+        tv_savings.setText(data[SAVINGS]);
 
         Button profileBack = (Button) v.findViewById(R.id.profile_back);
         Button addRemove = (Button) v.findViewById(R.id.add_remove);
 
         final FragmentManager fm = getFragmentManager();
 
+
+        profileBack.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
+        profileBack.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                remove();
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, fm.getFragments().get(1)).commit(); // i dont know why this works
+                destroyThisFragment();
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, fm.getFragments().get(1)).commit(); // Go back to the previous fragment
             }
         });
 
+        removeOrAdd(addRemove);
+        addRemove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont)); // Remove when I make a custom button layout
         addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Add new DB entry and check if already in DB");
+                if (!inDatabase) {
+                    dbHelper.insertTransport(data[MAKE], data[MODEL], data[YEAR], data[CLASS], data[TRANSMISSION], data[TRAIN],
+                            Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))),
+                            data[TYPE], data[COSTS], data[SAVINGS]);
+                } else {
+                    dbHelper.removeTransport(data[MAKE], data[MODEL], data[YEAR], data[CLASS], data[TRANSMISSION], data[TRAIN],
+                            Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))),
+                            data[TYPE], data[COSTS], data[SAVINGS]);
+                }
+
+                inDatabase = !inDatabase;
+                removeOrAdd((Button) view.findViewById(R.id.add_remove));
             }
         });
 
         return v;
     }
 
-    public void remove() {
+    // Changes button text to remove or add if the viewed car is in the database or not
+    public void removeOrAdd(Button addRemove) {
+        if (inDatabase) {
+            addRemove.setText(R.string.remove_vehicle);
+            addRemove.setBackgroundColor(getResources().getColor(R.color.colorCarLine));
+        } else {
+            addRemove.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
+            addRemove.setText(R.string.add_vehicle);
+        }
+    }
+
+    public void destroyThisFragment() {
         getFragmentManager().beginTransaction().remove(this).commit();
     }
 }
