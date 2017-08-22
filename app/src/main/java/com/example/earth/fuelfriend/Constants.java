@@ -43,4 +43,15 @@ final class Constants {
     static final String ACTION_WALK = "ACTION_WALK";
     static final String ACTION_CAR = "ACTION_CAR";
     static final String ACTION_BIKE = "ACTION_BIKE";
+
+    static final int MAKE = 4;
+    static final int MODEL = 5;
+    static final int YEAR = 8;
+    static final int CLASS = 7;
+    static final int TRANSMISSION = 6;
+    static final int TRAIN = 1;
+    static final int RATE = 0;
+    static final int TYPE = 3;
+    static final int COSTS = 2;
+    static final int SAVINGS = 9;
 }
