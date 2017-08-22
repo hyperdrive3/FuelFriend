@@ -16,12 +16,7 @@ import android.view.ViewGroup;
 public class GarageFragment extends Fragment {
 
     FragmentPagerAdapter adapterViewPager;
-
-    // newInstance constructor for creating fragment with arguments
-    public static GarageFragment newInstance() {
-        return new GarageFragment();
-    }
-
+    
     // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
