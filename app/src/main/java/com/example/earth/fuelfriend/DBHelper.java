@@ -42,6 +42,8 @@ import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
 /**
  * Created by EARTH on 2/08/2017.
+ *
+ * NOTE: Value must be enclosed with ''
  */
 
 class DBHelper extends SQLiteOpenHelper {
@@ -67,6 +69,7 @@ class DBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + TRANS_TABLE_NAME + "(" +
                 TRANS_ID + " INTEGER PRIMARY KEY, " +
                 TRANS_YEAR + " REAL, " +
+                TRANS_MAKE + " TEXT, " +
                 TRANS_MODEL + " TEXT, " +
                 TRANS_CLASS + " TEXT, " +
                 TRANS_TRANSMISSION + " TEXT, " +
@@ -177,12 +180,6 @@ class DBHelper extends SQLiteOpenHelper {
                 db.insert(MKR_TABLE_NAME, null, createMarkerDbEntry(l, TRANSPORT_CAR, currentDateandTime));
         }
 
-        // LITERS NOT GALLONS
-       /* db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Ferrari", "California T", 78, 0.13175, 2016));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Kia", "Niro FE", 45.05, 0.04732, 2017));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Lamborghini", "Aventador Roadster", 87.1, 0.18112, 2017));
-        db.insert(TRANS_TABLE_NAME, null, createTransportDbEntry("Aston Martin", "V12 Vantage S", 79.87, 0.19523, 2017));
-*/
     }
 
     private long id;
@@ -223,12 +220,33 @@ class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    // Update to remove with more information, copy checkifintransportDb
+    public void removeTransport(String make, String model) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TRANS_TABLE_NAME, TRANS_MAKE + "=? AND " + TRANS_MODEL + "=?", new String[]{make, model});
+        db.close();
+    }
+
     void updateEntryDistance(double distance) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(MKR_DISTANCE, distance);
 
         db.update(MKR_TABLE_NAME, cv, MKR_ID + "=?", new String[] {String.valueOf(id)});
+    }
+
+    public boolean checkIfTransportInDb(String make, String model/*, String year, String vclass, String transmission,
+                                               String dtrain, String fuelrate, String fueltype, String costs, String savings*/) {
+        SQLiteDatabase db = getReadableDatabase();
+        String Query = "Select * from " + TRANS_TABLE_NAME + " where " + TRANS_MAKE + " = '" + make + "' AND " + TRANS_MODEL + " = '" + model + "'";
+        Cursor cursor = db.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
     }
 
     private static final String SQL_DELETE_ENTRIES =
