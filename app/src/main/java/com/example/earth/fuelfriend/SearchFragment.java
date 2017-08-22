@@ -47,6 +47,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                GeneralHelper.hideKeyboard(getActivity());
                 CarProfileFragment cpf = new CarProfileFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("data", (String) view.getTag(R.id.string));
@@ -117,7 +118,8 @@ public class SearchFragment extends Fragment {
                 lineNumber++;
                 String nextLine = inputStream.nextLine();
                 String[] line = nextLine.split(",");
-                if (line.length == 10 && line[8].matches("-?\\d+(\\.\\d+)?"))
+
+                if (line.length == 10 && line[8].matches("-?\\d+(\\.\\d+)?") && !readingVehicleFile.contains(nextLine)) // data set had duplicates..
                     readingVehicleFile.add(nextLine);
             }
             progress.add(Integer.toString(file_id));
