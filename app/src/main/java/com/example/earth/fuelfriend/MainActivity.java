@@ -89,15 +89,16 @@ public class MainActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnInfoWindowClickListener,
         LocationListener {
 
+    FragmentManager fragmentManager = getSupportFragmentManager();
     private GoogleMap mMap;
     private SupportMapFragment mSupportMapFragment;
     private SearchFragment mSearchFragment;
+    private GarageFragment mGarageFragment;
     private LocationManager mLocationManager;
     private DBHelper mDatabaseHelper;
     private ArrayList<? extends CustomMarker> mMarkerInformation;
     private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
-
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     @Override
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity
         mSupportMapFragment = SupportMapFragment.newInstance();
         mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
+        mGarageFragment = GarageFragment.newInstance(0, "LOL");
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
@@ -174,15 +176,10 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    FragmentManager fragmentManager = getSupportFragmentManager();
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-/*        if (!mSupportMapFragment.isAdded())
-            fragmentManager.beginTransaction().add(R.id.map, mSupportMapFragment).commit();
-        if (!mSearchFragment.isAdded())
-            fragmentManager.beginTransaction().add(R.id.map, mSearchFragment).commit();*/
 
         switch (item.getItemId()) {
             case R.id.nav_map:
@@ -190,7 +187,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_manage:
-                System.out.println("CHOOSE DESIGNATED CAR");
+                fragmentManager.beginTransaction().replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
                 break;
 
             case R.id.nav_add:
@@ -595,8 +592,6 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-            //Toast.makeText(getBaseContext(), "DISTANCE: " + distance + ", FUEL USAGE: " + 0.0500 * 1.8 + "KM/Litre", Toast.LENGTH_LONG).show();
-
             // Drawing polyline in the Google Map for the i-th route
             mPolylines.put(origin, new CustomPolyline(lineOptions, distance));
             mMap.addPolyline(lineOptions);
@@ -700,4 +695,5 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
 }
