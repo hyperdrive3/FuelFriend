@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
 import static com.example.earth.fuelfriend.Constants.CLASS;
 import static com.example.earth.fuelfriend.Constants.COSTS;
 import static com.example.earth.fuelfriend.Constants.MAKE;
@@ -68,14 +70,27 @@ public class CarProfileFragment extends Fragment {
 
         final FragmentManager fm = getFragmentManager();
 
-
         profileBack.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
         profileBack.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 destroyThisFragment();
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, fm.getFragments().get(1)).commit(); // Go back to the previous fragment
+                List<Fragment> test = fm.getFragments();
+                for (Fragment f : test) {
+                    try {
+                        String s = f.getArguments().getString("searchFragment");
+                        System.out.println("HOLY DAMN -->" + s);
+                        getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit(); // Go back to the previous fragment
+                        break;
+                    } catch (Exception e) {
+                        continue;
+                    }
+
+
+                }
+
+
             }
         });
 
