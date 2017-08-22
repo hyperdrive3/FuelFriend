@@ -11,6 +11,7 @@ Supervised by Mark Appereley
 
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<? extends CustomMarker> mMarkerInformation;
     private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
+    private ActionBar actionBar;
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     @Override
@@ -118,8 +120,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack("root", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
+        actionBar = getActionBar();
         googleMapMarkers = new ArrayList<>();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
@@ -183,15 +184,17 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.nav_map:
+                setTitle("Travel History Map");
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
                 break;
 
             case R.id.nav_manage:
+                setTitle("Personal Garage");
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
                 break;
 
             case R.id.nav_add:
-
+                setTitle("Vehicle Database");
                 if (mSearchFragment.getArguments() == null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("searchFragment", "searchFragment");
