@@ -118,14 +118,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack("root", FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
         googleMapMarkers = new ArrayList<>();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
         mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
-        mGarageFragment = GarageFragment.newInstance(0, "LOL");
+        mGarageFragment = new GarageFragment();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
@@ -183,15 +181,17 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.nav_map:
+                setTitle("Travel History Map");
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
                 break;
 
             case R.id.nav_manage:
+                setTitle("Personal Garage");
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
                 break;
 
             case R.id.nav_add:
-
+                setTitle("Vehicle Database");
                 if (mSearchFragment.getArguments() == null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("searchFragment", "searchFragment");

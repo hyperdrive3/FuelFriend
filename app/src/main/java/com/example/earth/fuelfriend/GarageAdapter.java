@@ -1,19 +1,30 @@
 package com.example.earth.fuelfriend;
 
 
+import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import java.util.ArrayList;
+
+import static com.example.earth.fuelfriend.Constants.MODEL;
 
 /**
  * Created by EARTH on 22/08/2017.
  */
 
 public class GarageAdapter extends FragmentPagerAdapter {
-    private static int NUM_ITEMS = 3;
+    private static int NUM_ITEMS;
+    private ArrayList<String> mVehicleGarage;
+    private DBHelper dbHelper;
 
-    public GarageAdapter(FragmentManager fragmentManager) {
+    public GarageAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
+        dbHelper = new DBHelper(context);
+        mVehicleGarage = new DBHelper(context).getAllTransport();
+        NUM_ITEMS = mVehicleGarage.size();
     }
 
     // Returns total number of pages
@@ -25,21 +36,18 @@ public class GarageAdapter extends FragmentPagerAdapter {
     // Returns the fragment to display for that page
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0: // Fragment # 0 - This will show FirstFragment
-                return new GarageCarProfile();
-            case 1: // Fragment # 0 - This will show FirstFragment different title
-                return new GarageCarProfile();
-            case 2: // Fragment # 1 - This will show SecondFragment
-                return new GarageCarProfile();
-            default:
-                return null;
-        }
+        Bundle bundle = new Bundle();
+        bundle.putString("vehicle", mVehicleGarage.get(position));
+        GarageCarProfile gcp = new GarageCarProfile();
+        gcp.setArguments(bundle);
+        return gcp;
     }
 
     // Returns the page title for the top indicator
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Page " + position;
+        mVehicleGarage = dbHelper.getAllTransport();
+        String[] title = mVehicleGarage.get(position).split(",");
+        return title[MODEL];
     }
 }

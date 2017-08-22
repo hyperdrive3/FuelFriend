@@ -47,8 +47,25 @@ import static com.example.earth.fuelfriend.Constants.TRANS_YEAR;
 
 class DBHelper extends SQLiteOpenHelper {
 
+    private static final String SQL_DELETE_ENTRIES =
+            "DROP TABLE IF EXISTS " + MKR_TABLE_NAME;
     private static ArrayList<LatLng> latLngArrayList;
 
+    static {
+
+        latLngArrayList = new ArrayList<>();
+        latLngArrayList.add(new LatLng(-37.768478, 175.335827));
+        latLngArrayList.add(new LatLng(-37.788364, 175.311322));
+        latLngArrayList.add(new LatLng(-37.796246, 175.294351));
+        latLngArrayList.add(new LatLng(-37.802238, 175.304919));
+        latLngArrayList.add(new LatLng(-37.798283, 175.295127));
+        latLngArrayList.add(new LatLng(-37.748911, 175.232617));
+        latLngArrayList.add(new LatLng(-37.727168, 175.252313));
+        latLngArrayList.add(new LatLng(-37.866721, 175.339425));
+
+    }
+
+    private long id;
 
     DBHelper(Context context) {
         super(context, FF_DATABASE_NAME, null, DATABASE_VERSION);
@@ -82,30 +99,25 @@ class DBHelper extends SQLiteOpenHelper {
         setDefaultLabel(db);
     }
 
-
-    static {
-
-        latLngArrayList = new ArrayList<>();
-        latLngArrayList.add(new LatLng(-37.768478, 175.335827));
-        latLngArrayList.add(new LatLng(-37.788364, 175.311322));
-        latLngArrayList.add(new LatLng(-37.796246, 175.294351));
-        latLngArrayList.add(new LatLng(-37.802238, 175.304919));
-        latLngArrayList.add(new LatLng(-37.798283, 175.295127));
-        latLngArrayList.add(new LatLng(-37.748911, 175.232617));
-        latLngArrayList.add(new LatLng(-37.727168, 175.252313));
-        latLngArrayList.add(new LatLng(-37.866721, 175.339425));
-
-    }
-
-    ArrayList<String> getAllTransport() {
+    public ArrayList<String> getAllTransport() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TRANS_TABLE_NAME, null);
 
         ArrayList<String> transport = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
-                transport.add(c.getString(c.getColumnIndex(TRANS_YEAR)) + " " + c.getString(c.getColumnIndex(TRANS_MAKE)) + " " + c.getString(c.getColumnIndex(TRANS_MODEL)));
+                transport.add(c.getString(c.getColumnIndex(TRANS_FUEL_PER_KM)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_DRIVETRAIN)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_ANNUAL_COST)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_FUEL_TYPE)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_MAKE)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_MODEL)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_TRANSMISSION)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_CLASS)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_YEAR)) + "," +
+                        c.getString(c.getColumnIndex(TRANS_ANNUAL_SAVING)));
             } while (c.moveToNext());
+
         }
         System.out.println("SIZE OF THE TRANSPORT TABLE = " + transport.size());
         return transport;
@@ -165,8 +177,6 @@ class DBHelper extends SQLiteOpenHelper {
         }
 
     }
-
-    private long id;
 
     void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
 
@@ -267,9 +277,6 @@ class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return true;
     }
-
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + MKR_TABLE_NAME;
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is

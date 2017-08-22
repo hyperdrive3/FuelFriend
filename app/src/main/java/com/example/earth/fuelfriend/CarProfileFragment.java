@@ -80,16 +80,13 @@ public class CarProfileFragment extends Fragment {
                 for (Fragment f : test) {
                     try {
                         String s = f.getArguments().getString("searchFragment");
-                        System.out.println("HOLY DAMN -->" + s);
-                        getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit(); // Go back to the previous fragment
-                        break;
-                    } catch (Exception e) {
-                        continue;
+                        if (s.equals("searchFragment")) {
+                            getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit(); // Go back to the previous fragment
+                            break;
+                        }
+                    } catch (Exception ignored) {
                     }
-
-
                 }
-
 
             }
         });
