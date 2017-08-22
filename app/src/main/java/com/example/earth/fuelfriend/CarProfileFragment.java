@@ -55,6 +55,9 @@ public class CarProfileFragment extends Fragment {
 
         final FragmentManager fm = getFragmentManager();
 
+
+        profileBack.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
+        profileBack.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +67,7 @@ public class CarProfileFragment extends Fragment {
         });
 
         removeOrAdd(addRemove);
+        addRemove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont)); // Remove when I make a custom button layout
         addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,8 +90,12 @@ public class CarProfileFragment extends Fragment {
     public void removeOrAdd(Button addRemove) {
         if (inDatabase) {
             addRemove.setText(R.string.remove_vehicle);
-        } else
+            addRemove.setBackgroundColor(getResources().getColor(R.color.colorCarLine));
+        } else {
+            addRemove.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
             addRemove.setText(R.string.add_vehicle);
+        }
+
     }
 
     public void destroyThisFragment() {
