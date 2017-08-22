@@ -11,7 +11,6 @@ Supervised by Mark Appereley
 
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -100,7 +99,6 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<? extends CustomMarker> mMarkerInformation;
     private HashMap<LatLng, CustomPolyline> mPolylines;
     private ArrayList<Marker> googleMapMarkers;
-    private ActionBar actionBar;
     volatile private boolean UNLOCK_ON_POLYLINE_ADDED = false;
 
     @Override
@@ -120,13 +118,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        actionBar = getActionBar();
         googleMapMarkers = new ArrayList<>();
         mDatabaseHelper = new DBHelper(this);
         mSupportMapFragment = SupportMapFragment.newInstance();
         mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
-        mGarageFragment = GarageFragment.newInstance(0, "LOL");
+        mGarageFragment = GarageFragment.newInstance();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
