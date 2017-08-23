@@ -119,7 +119,6 @@ class DBHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
 
         }
-        System.out.println("SIZE OF THE TRANSPORT TABLE = " + transport.size());
         return transport;
     }
 
