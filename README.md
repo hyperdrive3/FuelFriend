@@ -1,6 +1,6 @@
 # FuelFriend
-A project to explore android energy conservation in the grand scheme of "The Internet of Things".
+A project to explore energy conservation in the grand scheme of "The Internet of Things".
 
-Notes:
+Here, I am developing an android application utilizing API Level 21, developed purely on my personal smartphone, the Samsung Galaxy S4 with the latest provider updates.
 
-Tested only on a Samsung Galaxy i9505 S4.
+
