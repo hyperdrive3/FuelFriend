@@ -6,7 +6,7 @@ package com.example.earth.fuelfriend;
 
 final class Constants {
 
-    public static final String PREFS_NAME = "preferences";
+    static final String PREFS_NAME = "preferences";
     static final int DATABASE_VERSION = 1;
     static final String FF_DATABASE_NAME = "fuelfriend.db";
     // Marker Table
