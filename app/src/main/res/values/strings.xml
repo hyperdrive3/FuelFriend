@@ -24,4 +24,6 @@
     <string name="view_vehicles">View Vehicles</string>
     <string name="remove_vehicle">Remove from Garage</string>
     <string name="add_vehicle">Add to Garage</string>
+    <string name="add_to_garage">Add to Garage</string>
+    <string name="back">Back</string>
 </resources>
