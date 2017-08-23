@@ -1,7 +1,11 @@
 package com.example.earth.fuelfriend;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +30,12 @@ import static com.example.earth.fuelfriend.Constants.YEAR;
 public class GarageCarProfile extends Fragment {
 
     private String[] data;
-
+    private DBHelper dbHelper;
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
+        dbHelper = new DBHelper(getContext());
         data = getArguments().getString("vehicle").split(",");
 
         final View v = inflater.inflate(R.layout.vehicle_tab, container, false);
@@ -61,8 +66,50 @@ public class GarageCarProfile extends Fragment {
 
         designate.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
         designate.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
+        designate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         remove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
         remove.setBackgroundColor(getResources().getColor(R.color.colorCarLine));
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Remove " + data[YEAR] + " " + data[MAKE] + " " + data[MODEL] + " from garage?");
+
+                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dbHelper.removeTransport(data[MAKE], data[MODEL], data[YEAR], data[CLASS],
+                                data[TRANSMISSION], data[TRAIN], data[RATE],
+                                data[TYPE], data[COSTS], data[SAVINGS]);
+
+                        FragmentManager fm = getFragmentManager();
+                        ViewPager sliding = (ViewPager) container.findViewById(R.id.vpPager);
+                        GarageAdapter ga = (GarageAdapter) sliding.getAdapter();
+                        ga.refreshGarage();
+                        ga.notifyDataSetChanged();
+
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+            }
+        });
+
         return v;
     }
 }
