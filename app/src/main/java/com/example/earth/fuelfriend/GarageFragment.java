@@ -2,7 +2,6 @@ package com.example.earth.fuelfriend;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 
 public class GarageFragment extends Fragment {
 
-    FragmentPagerAdapter adapterViewPager;
+    GarageAdapter mGarageAdapter;
     
     // Store instance variables based on arguments passed
     @Override
@@ -35,8 +34,8 @@ public class GarageFragment extends Fragment {
         pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.colorWalkLine));
 
         ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
-        adapterViewPager = new GarageAdapter(getFragmentManager(), getContext());
-        vpPager.setAdapter(adapterViewPager);
+        mGarageAdapter = new GarageAdapter(getFragmentManager(), getContext());
+        vpPager.setAdapter(mGarageAdapter);
 
         return view;
     }

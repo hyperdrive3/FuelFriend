@@ -19,11 +19,11 @@ import java.util.Scanner;
 
 public class SearchFragment extends Fragment {
 
-    ArrayList<String> databaseVehicles = new ArrayList<>();
-    ArrayList<String> progress = new ArrayList<>();
+    ArrayList<String> mDatabaseVehicles = new ArrayList<>();
+    ArrayList<String> mProgress = new ArrayList<>();
     ListView lv;
     DBHelper dbHelper;
-    private SearchableAdapter search;
+    private SearchableAdapter mSearchAdapter;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -32,13 +32,13 @@ public class SearchFragment extends Fragment {
         int csvResources[] = {R.raw.vehicles_pt6, R.raw.vehicles_pt5, R.raw.vehicles_pt2/*, R.raw.vehicles_pt3, R.raw.vehicles_pt4, R.raw.vehicles_pt1*/};
 
         if (savedInstanceState != null) {
-            databaseVehicles = savedInstanceState.getStringArrayList("databaseVehicles");
-            progress = savedInstanceState.getStringArrayList("progress");
+            mDatabaseVehicles = savedInstanceState.getStringArrayList("mDatabaseVehicles");
+            mProgress = savedInstanceState.getStringArrayList("mProgress");
         }
 
         final View v = inflater.inflate(R.layout.search_transport, container, false);
         dbHelper = new DBHelper(getContext());
-        search = new SearchableAdapter(getContext(), databaseVehicles);
+        mSearchAdapter = new SearchableAdapter(getContext(), mDatabaseVehicles);
         SearchView sv = (SearchView) v.findViewById(R.id.search_input);
         lv = (ListView) v.findViewById(R.id.transport_list);
 
@@ -53,13 +53,13 @@ public class SearchFragment extends Fragment {
                 cpf.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFm();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, cpf, "search").commit(); // lol change this
+                fragmentManager.beginTransaction().replace(R.id.content_frame, cpf, "mSearchAdapter").commit(); // lol change this
                 // When clicked, pass information to another fragment which displays information on the car
                 // and display a 'Add' button to add to personal database of cars which the user drives.
             }
         });
 
-        lv.setAdapter(search);
+        lv.setAdapter(mSearchAdapter);
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -69,13 +69,13 @@ public class SearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                search.getFilter().filter(s);
+                mSearchAdapter.getFilter().filter(s);
                 return false;
             }
         });
 
         for (int csvResource : csvResources) {
-            if (!progress.contains(Integer.toString(csvResource))) {
+            if (!mProgress.contains(Integer.toString(csvResource))) {
             InputStream inputStream = getResources().openRawResource(csvResource);
                 new LoadCSVTask(csvResource).execute(inputStream);
             }
@@ -91,8 +91,8 @@ public class SearchFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putStringArrayList("progress", progress);
-        outState.putStringArrayList("databaseVehicles", databaseVehicles);
+        outState.putStringArrayList("mProgress", mProgress);
+        outState.putStringArrayList("mDatabaseVehicles", mDatabaseVehicles);
         super.onSaveInstanceState(outState);
     }
 
@@ -121,20 +121,20 @@ public class SearchFragment extends Fragment {
                 if (line.length == 10 && line[8].matches("-?\\d+(\\.\\d+)?") && !readingVehicleFile.contains(nextLine)) // data set had duplicates..
                     readingVehicleFile.add(nextLine);
             }
-            progress.add(Integer.toString(file_id));
+            mProgress.add(Integer.toString(file_id));
             inputStream.close();
             return lineNumber;
         }
 
-        //If you need to show the progress use this method
+        //If you need to show the mProgress use this method
         protected void onProgressUpdate(Integer... progress) {
 
         }
 
         //This method is triggered at the end of the process, in your case when the loading has finished
         protected void onPostExecute(Long result) {
-            databaseVehicles.addAll(readingVehicleFile);
-            search.setOriginalData(databaseVehicles);
+            mDatabaseVehicles.addAll(readingVehicleFile);
+            mSearchAdapter.setOriginalData(mDatabaseVehicles);
         }
     }
 

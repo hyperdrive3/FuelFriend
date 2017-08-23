@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
@@ -15,8 +15,8 @@ import static com.example.earth.fuelfriend.Constants.MODEL;
  * Created by EARTH on 22/08/2017.
  */
 
-public class GarageAdapter extends FragmentPagerAdapter {
-    private static int NUM_ITEMS;
+public class GarageAdapter extends FragmentStatePagerAdapter {
+
     private ArrayList<String> mVehicleGarage;
     private DBHelper dbHelper;
 
@@ -24,13 +24,17 @@ public class GarageAdapter extends FragmentPagerAdapter {
         super(fragmentManager);
         dbHelper = new DBHelper(context);
         mVehicleGarage = new DBHelper(context).getAllTransport();
-        NUM_ITEMS = mVehicleGarage.size();
     }
 
     // Returns total number of pages
     @Override
     public int getCount() {
-        return NUM_ITEMS;
+        return mVehicleGarage.size();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     // Returns the fragment to display for that page
@@ -46,8 +50,15 @@ public class GarageAdapter extends FragmentPagerAdapter {
     // Returns the page title for the top indicator
     @Override
     public CharSequence getPageTitle(int position) {
-        mVehicleGarage = dbHelper.getAllTransport();
         String[] title = mVehicleGarage.get(position).split(",");
         return title[MODEL];
+    }
+
+    public void refreshGarage() {
+        ArrayList<String> currentData = dbHelper.getAllTransport();
+        if (currentData.size() != getCount()) {
+            mVehicleGarage = currentData;
+            notifyDataSetChanged();
+        }
     }
 }
