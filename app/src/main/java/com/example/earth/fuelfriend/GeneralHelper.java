@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,8 @@ import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.example.earth.fuelfriend.Constants.PREFS_NAME;
+import static com.example.earth.fuelfriend.Constants.RATE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 
@@ -121,9 +124,13 @@ final class GeneralHelper {
         return dest + "|" + origin.getTransportMode();
     }
 
-    static String createSnippetText(Double distance) {
+    static String createSnippetText(Double distance, String vehicle) {
+
+        String[] vehicleArray = vehicle.split(",");
+        double fuelRate = Double.valueOf(vehicleArray[RATE]) / 100;
+
         return String.format("%.1f", distance) + " km\n" +
-                String.format("%.2f", 0.05 * distance) + " L";
+                String.format("%.2f", fuelRate * distance) + " L|";
     }
 
     static Bitmap getBitmap(int drawableRes, Context context) {
@@ -172,7 +179,7 @@ final class GeneralHelper {
 
     }
 
-    public static void hideKeyboard(Activity activity) {
+    static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();
@@ -181,6 +188,11 @@ final class GeneralHelper {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    static String getDesignatedVehicle(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        return settings.getString("currentCar", "");
     }
 
 }

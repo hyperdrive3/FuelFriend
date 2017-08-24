@@ -14,14 +14,16 @@ public class CustomMarker {
     private String transportMode;
     private Double distance;
     private String geoLocation;
+    private String vehicle;
 
-    CustomMarker(int i, LatLng l, String d, String t, double dist, String geo) {
+    CustomMarker(int i, LatLng l, String d, String t, double dist, String geo, String v) {
         id = i;
         coordinates = l;
         dateTime = d;
         transportMode = t;
         distance = dist;
         geoLocation = geo;
+        vehicle = v;
     }
 
     public LatLng getCoordinates() {
@@ -46,5 +48,9 @@ public class CustomMarker {
 
     public Double getDistance() {
         return distance;
+    }
+
+    public String getVehicle() {
+        return vehicle;
     }
 }
