@@ -1,11 +1,10 @@
 package com.example.earth.fuelfriend;
 
 /*
+    Created by James Wong for a Waikato University New Zealand COMP477 Project
+    Supervised by Mark Appereley
 
-Created by James Wong for a Waikato University New Zealand COMP477 Project
-Supervised by Mark Appereley
-
-1228302
+    1228302
 
 */
 
@@ -81,6 +80,7 @@ import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
 import static com.example.earth.fuelfriend.GeneralHelper.displayAboutMessage;
 import static com.example.earth.fuelfriend.GeneralHelper.downloadUrl;
 import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
+import static com.example.earth.fuelfriend.GeneralHelper.getDesignatedVehicle;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportColor;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportIcon;
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-
+        GeneralHelper.hideKeyboard(this);
         switch (item.getItemId()) {
             case R.id.nav_map:
                 setTitle("Travel History Map");
@@ -253,6 +253,8 @@ public class MainActivity extends AppCompatActivity
 
     public void setNewTransportMarker(String transport) {
 
+        String currentVehicle = getDesignatedVehicle(getBaseContext());
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String currentDateandTime = sdf.format(new Date());
         Location location = getLastKnownLocation();
@@ -274,11 +276,11 @@ public class MainActivity extends AppCompatActivity
 
         //Then add marker to map
         UNLOCK_ON_POLYLINE_ADDED = false;
-        mDatabaseHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality());
+        mDatabaseHelper.insertMarker(dest, transport, currentDateandTime, addresses.get(0).getLocality(), currentVehicle);
 
         LatLng origin = mMarkerInformation.get(mMarkerInformation.size() - 1).getCoordinates();
 
-        final AddNewMarkerThread r = new AddNewMarkerThread(transport, origin, dest, addresses.get(0).getLocality());
+        final AddNewMarkerThread r = new AddNewMarkerThread(transport, origin, dest, addresses.get(0).getLocality(), currentVehicle);
         new Thread(r).start();
         drawPolyline(mMarkerInformation.get(mMarkerInformation.size() - 1).getTransportMode(), origin, dest);
 
@@ -329,7 +331,7 @@ public class MainActivity extends AppCompatActivity
             CustomMarker cm = mMarkerInformation.get(i);
             if (i < mMarkerInformation.size() - 1) {
                 title_text = createTitleText(cm, mMarkerInformation.get(i + 1).getGeoLocation()); // i + 1 representing the destination of the origin marker
-                snippet_text = createSnippetText(cm.getDistance());
+                snippet_text = createSnippetText(cm.getDistance(), cm.getVehicle());
             }
 
             Marker marker = mMap.addMarker(new MarkerOptions() // Draw markers
@@ -654,15 +656,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public class AddNewMarkerThread implements Runnable {
-        String transport, dest_geolocation;
+        String transport, dest_geolocation, vehicle;
         LatLng dest, origin;
 
 
-        public AddNewMarkerThread(String t, LatLng a, LatLng b, String geo) {
+        public AddNewMarkerThread(String t, LatLng a, LatLng b, String geo, String v) {
             transport = t;
             origin = a;
             dest = b;
             dest_geolocation = geo;
+            vehicle = v;
         }
 
         public void run() {
@@ -679,10 +682,12 @@ public class MainActivity extends AppCompatActivity
                             // Updating the 2nd to last marker with new information since new marker added.
                             Marker originMarker = googleMapMarkers.get(googleMapMarkers.size() - 1);
                             CustomMarker cm = mMarkerInformation.get(mMarkerInformation.size() - 2);
+                            String distance = mPolylines.get(origin).getPolylineDistance();
+
                             Marker marker_1 = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(getBitmap(getTransportIcon(cm.getTransportMode()), getBaseContext())))
                                     .position(new LatLng(origin.latitude, origin.longitude))
                                     .title(createTitleText(cm, dest_geolocation))
-                                    .snippet(createSnippetText(convertStringDistanceToDouble(mPolylines.get(origin).getPolylineDistance()))));
+                                    .snippet(createSnippetText(convertStringDistanceToDouble(distance), vehicle)));
 
                             originMarker.remove();
                             googleMapMarkers.remove(googleMapMarkers.size() - 1);
