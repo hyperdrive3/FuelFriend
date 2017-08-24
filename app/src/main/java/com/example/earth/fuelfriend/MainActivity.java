@@ -70,10 +70,13 @@ import java.util.Locale;
 import static com.example.earth.fuelfriend.Constants.ACTION_BIKE;
 import static com.example.earth.fuelfriend.Constants.ACTION_CAR;
 import static com.example.earth.fuelfriend.Constants.ACTION_WALK;
+import static com.example.earth.fuelfriend.Constants.MAKE;
+import static com.example.earth.fuelfriend.Constants.MODEL;
 import static com.example.earth.fuelfriend.Constants.NOTIFICATION_ID;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
+import static com.example.earth.fuelfriend.Constants.YEAR;
 import static com.example.earth.fuelfriend.GeneralHelper.convertStringDistanceToDouble;
 import static com.example.earth.fuelfriend.GeneralHelper.createSnippetText;
 import static com.example.earth.fuelfriend.GeneralHelper.createTitleText;
@@ -396,6 +399,20 @@ public class MainActivity extends AppCompatActivity
 
         CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainActivity.this);
         mMap.setInfoWindowAdapter(adapter);
+
+        mMap.setOnInfoWindowLongClickListener(new GoogleMap.OnInfoWindowLongClickListener() {
+            @Override
+            public void onInfoWindowLongClick(Marker marker) {
+                try {
+                    System.out.println(marker.getSnippet());
+                    String[] vehicle = marker.getSnippet().substring(marker.getSnippet().indexOf("|"), marker.getSnippet().length()).split(",");
+                    String vehicleTitle = vehicle[YEAR] + " " + vehicle[MAKE] + " " + vehicle[MODEL];
+                    Toast.makeText(getApplicationContext(), vehicleTitle, Toast.LENGTH_LONG).show();
+                } catch (Exception ignore) {
+                }
+
+            }
+        });
 
         try {
             // Customise the styling of the base map using a JSON object defined
