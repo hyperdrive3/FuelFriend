@@ -23,6 +23,7 @@ import static com.example.earth.fuelfriend.Constants.MKR_LAT;
 import static com.example.earth.fuelfriend.Constants.MKR_LNG;
 import static com.example.earth.fuelfriend.Constants.MKR_TABLE_NAME;
 import static com.example.earth.fuelfriend.Constants.MKR_TRANSPORT;
+import static com.example.earth.fuelfriend.Constants.MKR_VEHICLE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_BIKE;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_CAR;
 import static com.example.earth.fuelfriend.Constants.TRANSPORT_WALK;
@@ -79,6 +80,7 @@ class DBHelper extends SQLiteOpenHelper {
                 MKR_DATE + " TEXT, " +
                 MKR_DISTANCE + " REAL, " +
                 MKR_GEOLOCATION + " TEXT, " +
+                MKR_VEHICLE + " TEXT, " +
                 MKR_TRANSPORT + " TEXT)"
         );
 
@@ -137,7 +139,8 @@ class DBHelper extends SQLiteOpenHelper {
                 double distance = Double.parseDouble(c.getString(c.getColumnIndex(MKR_DISTANCE)));
                 String geocode = c.getString(c.getColumnIndex(MKR_GEOLOCATION));
                 String transport = c.getString(c.getColumnIndex(MKR_TRANSPORT));
-                markers.add(new CustomMarker(id, coordinates, date_time, transport, distance, geocode));
+                String vehicle = c.getString(c.getColumnIndex(MKR_VEHICLE));
+                markers.add(new CustomMarker(id, coordinates, date_time, transport, distance, geocode, vehicle));
             } while (c.moveToNext());
         }
 
@@ -150,11 +153,14 @@ class DBHelper extends SQLiteOpenHelper {
         Random r = new Random();
         ContentValues cv = new ContentValues();
 
+        String test = "19,x,x,x,Toyota,Katana,x,x,2019,x";
+
         cv.put(MKR_LAT, l.latitude);
         cv.put(MKR_LNG, l.longitude);
         cv.put(MKR_DATE, date);
         cv.put(MKR_DISTANCE, 1 + (22 - 1) * r.nextDouble());
         cv.put(MKR_GEOLOCATION, "Hamilton City");
+        cv.put(MKR_VEHICLE, test);
         cv.put(MKR_TRANSPORT, transport);
 
         return cv;
@@ -177,7 +183,7 @@ class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    void insertMarker(LatLng location, String transport, String date_time, String geo_location) {
+    void insertMarker(LatLng location, String transport, String date_time, String geo_location, String vehicle) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -187,6 +193,7 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put(MKR_TRANSPORT, transport);
         cv.put(MKR_DATE, date_time);
         cv.put(MKR_GEOLOCATION, geo_location);
+        cv.put(MKR_VEHICLE, vehicle);
         cv.put(MKR_DISTANCE, 0);
 
         id = db.insert(MKR_TABLE_NAME, null, cv);
