@@ -18,6 +18,7 @@ final class Constants {
     static final String MKR_DISTANCE = "distance";
     static final String MKR_GEOLOCATION = "geolocation";
     static final String MKR_TRANSPORT = "transport_mode";
+    static final String MKR_VEHICLE = "transport_desc";
     // Transport Table
     static final String TRANS_TABLE_NAME = "transport_options";
     static final String TRANS_ID = "id";
