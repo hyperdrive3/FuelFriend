@@ -125,12 +125,12 @@ final class GeneralHelper {
     }
 
     static String createSnippetText(Double distance, String vehicle) {
-
+        double fuelRate;
         String[] vehicleArray = vehicle.split(",");
-        double fuelRate = Double.valueOf(vehicleArray[RATE]) / 100;
+        fuelRate = Double.valueOf(vehicleArray[RATE]) / 100;
 
         return String.format("%.1f", distance) + " km\n" +
-                String.format("%.2f", fuelRate * distance) + " L|";
+                String.format("%.2f", fuelRate * distance) + " L|" + vehicle;
     }
 
     static Bitmap getBitmap(int drawableRes, Context context) {
