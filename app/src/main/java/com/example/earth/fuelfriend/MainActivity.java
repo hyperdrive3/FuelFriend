@@ -638,7 +638,7 @@ public class MainActivity extends AppCompatActivity
             PendingIntent pendingIntentCar = PendingIntent.getBroadcast(context, 0, car_intent, 0);
 
             Intent walk_intent = new Intent();
-            walk_intent.setAction(ACTION_BIKE);
+            walk_intent.setAction(ACTION_WALK);
             PendingIntent pendingIntentWalk = PendingIntent.getBroadcast(context, 0, walk_intent, 0);
 
             NotificationCompat.Builder notificationBuilder =
