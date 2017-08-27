@@ -10,9 +10,11 @@ package com.example.earth.fuelfriend;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -86,6 +88,7 @@ import static com.example.earth.fuelfriend.GeneralHelper.getBitmap;
 import static com.example.earth.fuelfriend.GeneralHelper.getDesignatedVehicle;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportColor;
 import static com.example.earth.fuelfriend.GeneralHelper.getTransportIcon;
+import static com.example.earth.fuelfriend.GeneralHelper.isDesignated;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -255,6 +258,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setNewTransportMarker(String transport) {
+
+        if (!isDesignated(getBaseContext())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+            builder.setMessage("Cannot find designated vehicle information, please designate a vehicle you're going to be driving today.")
+                    .setTitle("Designate a Driven Vehicle");
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    navigationView.getMenu().getItem(1).setChecked(true);
+                    onNavigationItemSelected(navigationView.getMenu().getItem(1));
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
 
         String currentVehicle = getDesignatedVehicle(getBaseContext());
 
