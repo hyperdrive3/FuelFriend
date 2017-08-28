@@ -176,8 +176,8 @@ final class GeneralHelper {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
+
 
     static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -188,6 +188,12 @@ final class GeneralHelper {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    static boolean isDesignated(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+        String vehicle = settings.getString("currentCar", "");
+        return vehicle.split(",").length >= 10;
     }
 
     static String getDesignatedVehicle(Context context) {
