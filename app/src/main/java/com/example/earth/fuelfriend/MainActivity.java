@@ -10,11 +10,9 @@ package com.example.earth.fuelfriend;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -260,7 +258,7 @@ public class MainActivity extends AppCompatActivity
     public void setNewTransportMarker(String transport) {
 
         if (!isDesignated(getBaseContext())) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+/*            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
             builder.setMessage("Cannot find designated vehicle information, please designate a vehicle you're going to be driving today.")
                     .setTitle("Designate a Driven Vehicle");
 
@@ -272,7 +270,9 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             AlertDialog dialog = builder.create();
-            dialog.show();
+            dialog.show();*/
+
+            Toast.makeText(this, "Please designate a vehicle from your garage first.", Toast.LENGTH_LONG).show(); //Placeholder message until dialog works.
             return;
         }
 
