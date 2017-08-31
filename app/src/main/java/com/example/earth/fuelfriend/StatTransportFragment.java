@@ -8,4 +8,3 @@ import android.support.v4.app.Fragment;
 
 public class StatTransportFragment extends Fragment {
 }
-w
