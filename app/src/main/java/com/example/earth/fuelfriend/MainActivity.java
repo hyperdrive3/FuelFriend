@@ -189,6 +189,10 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
                 break;
 
+            case R.id.statistics:
+                setTitle("My Statistics");
+                break;
+
             case R.id.nav_manage:
                 setTitle("Personal Garage");
                 fragmentManager.beginTransaction().replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
