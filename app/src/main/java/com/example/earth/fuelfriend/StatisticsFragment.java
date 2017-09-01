@@ -27,13 +27,13 @@ public class StatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.garage_swipe_view, container, false);
+        View view = inflater.inflate(R.layout.stats_swipe_view, container, false);
 
-        PagerTabStrip pagerTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_header);
+        PagerTabStrip pagerTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_header_stats);
         pagerTabStrip.setDrawFullUnderline(true);
         pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.colorWalkLine));
 
-        ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
+        ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpStats);
         mStatisticsAdapter = new StatisticsAdapter(getFragmentManager());
         vpPager.setAdapter(mStatisticsAdapter);
 
