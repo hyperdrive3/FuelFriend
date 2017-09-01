@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity
     private SupportMapFragment mSupportMapFragment;
     private SearchFragment mSearchFragment;
     private GarageFragment mGarageFragment;
+    private StatisticsFragment mStatisticsFragment;
     private LocationManager mLocationManager;
     private DBHelper mDatabaseHelper;
     private ArrayList<? extends CustomMarker> mMarkerInformation;
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity
         mSupportMapFragment.getMapAsync(this);
         mSearchFragment = new SearchFragment();
         mGarageFragment = new GarageFragment();
+        mStatisticsFragment = new StatisticsFragment();
 
         mMarkerInformation = mDatabaseHelper.getAllMarkers();
         mPolylines = new HashMap<>();
@@ -191,6 +193,8 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.statistics:
                 setTitle("My Statistics");
+                fragmentManager.beginTransaction().replace(R.id.content_frame, mStatisticsFragment).addToBackStack("statistics").commit();
+
                 break;
 
             case R.id.nav_manage:
