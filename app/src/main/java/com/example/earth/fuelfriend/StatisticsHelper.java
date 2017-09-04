@@ -20,35 +20,40 @@ public class StatisticsHelper {
         markers = dbHelper.getAllMarkers();
     }
 
-    public double getCarTotalFuelUsage() {
+    public double getFuelUsage(CustomMarker cm) {
 
-        return 0;
+        String[] vehicle = cm.getVehicle().split(",");
+        double distance = cm.getDistance();
+
+        return distance * Double.valueOf(vehicle[0]) / 100;
     }
 
-    public double getWalkTotalFuelUsage() {
+    public double getTotalTransportFuelUsage(String transport) {
 
-        return 0;
+        double totalFuel = 0;
+
+        for (CustomMarker cm : markers) {
+            if (cm.getTransportMode().equals(transport)) {
+                totalFuel += getFuelUsage(cm);
+            }
+        }
+
+        return totalFuel;
     }
 
-    public double getBikeTotalFuelUsage() {
+    public double getTotalTransportDistance(String transport) {
 
-        return 0;
+        double totalDistance = 0;
+
+        for (CustomMarker cm : markers) {
+            if (cm.getTransportMode().equals(transport)) {
+                totalDistance += cm.getDistance();
+            }
+        }
+
+        return totalDistance;
     }
 
-    public double getWalkTotalDistance() {
-
-        return 0;
-    }
-
-    public double getBikeTotalDistance() {
-
-        return 0;
-    }
-
-    public double getCarTotalDistance() {
-
-        return 0;
-    }
 
     public double getCarLongestDistance() {
 
