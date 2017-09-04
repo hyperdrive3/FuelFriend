@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-40dp"
                 android:layout_marginTop="12dp"
-                android:text="Total Savings"
+                android:text="Fuel Savings"
                 android:textAlignment="center"
                 android:textStyle="bold" />
 
@@ -62,17 +62,67 @@
             android:layout_weight="1"
             android:background="@drawable/stats_bg"
             android:clickable="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:text="@string/car">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-50dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
                 android:text="Car Stats"
                 android:textAlignment="center"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/total_car_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="114.4 Km"
+                android:textAlignment="center"
+                android:textColor="@color/colorBikeLine"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Distance"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/total_car_fuel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="43.2 L"
+                android:textAlignment="center"
+                android:textColor="@color/colorBikeLine"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Fuel Usage"
+
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Used"
+                android:textAlignment="center"
+                android:textColor="#e23636"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+
         </LinearLayout>
 
     </LinearLayout>
@@ -94,16 +144,64 @@
             android:layout_weight="1"
             android:background="@drawable/stats_bg"
             android:clickable="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:text="@string/bicycle">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-50dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
+
                 android:text="Bike Stats"
                 android:textAlignment="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/total_bike_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="14.4 Km"
+                android:textAlignment="center"
+                android:textColor="@color/colorBikeLine"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Distance"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/total_bike_fuel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="15 L"
+                android:textAlignment="center"
+                android:textColor="@color/colorBikeLine"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Fuel Savings"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Saved"
+                android:textAlignment="center"
+                android:textColor="#42cbf4"
+                android:textSize="30dp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -119,17 +217,66 @@
             android:layout_weight="1"
             android:background="@drawable/stats_bg"
             android:clickable="true"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:text="@string/walking">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-50dp"
-                android:layout_marginTop="20dp"
+
+                android:layout_marginTop="12dp"
                 android:text="Walk Stats"
                 android:textAlignment="center"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/total_walk_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="400.2 Km"
+                android:textAlignment="center"
+                android:textColor="@color/colorWalkLine"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Distance"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/total_walk_fuel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="2.3 L"
+                android:textAlignment="center"
+                android:textColor="@color/colorWalkLine"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="-10dp"
+                android:text="Total Fuel Savings"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Saved"
+                android:textAlignment="center"
+                android:textColor="#42cbf4"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
