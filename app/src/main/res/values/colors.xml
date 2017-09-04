@@ -9,4 +9,6 @@
     <color name="colorInfoWindow">#0a777c</color>
     <color name="colorInfoWindowDark">#076166</color>
     <color name="colorInfoWindowFont">#d0d6d6</color>
+    <color name="colorStatisticsBg">#f2f2f2</color>
+    <color name="colorStatisticsShadow">#e5e5e5</color>
 </resources>

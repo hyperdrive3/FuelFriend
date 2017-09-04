@@ -19,11 +19,13 @@
     <string name="driving">Driving</string>
     <string name="set_consumption_values">Set Consumption Values</string>
     <string name="about">About</string>
-    <string name="map">Map</string>
-    <string name="add_new_vehicle">Add New Vehicle</string>
-    <string name="view_vehicles">View Vehicles</string>
+    <string name="map">Travel Map</string>
+    <string name="add_new_vehicle">Add Vehicle to Garage</string>
+    <string name="view_vehicles">View Garage</string>
     <string name="remove_vehicle">Remove from Garage</string>
     <string name="add_vehicle">Add to Garage</string>
     <string name="add_to_garage">Add to Garage</string>
     <string name="back">Back</string>
+    <string name="statistics">Statistics</string>
+    <string name="summary">Summary</string>
 </resources>
