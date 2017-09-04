@@ -53,6 +53,11 @@ public class CarProfileFragment extends Fragment {
         TextView tv_fueltype = (TextView) v.findViewById(R.id.fuel_type);
         TextView tv_costs = (TextView) v.findViewById(R.id.annual_cost);
         TextView tv_savings = (TextView) v.findViewById(R.id.annual_savings);
+        TextView tv_header_year = (TextView) v.findViewById(R.id.header_year);
+        TextView tv_header_makemodel = (TextView) v.findViewById(R.id.header_carmakemodel);
+
+        tv_header_year.setText(data[YEAR]);
+        tv_header_makemodel.setText(data[MAKE] + " " + data[MODEL]);
 
         tv_make.setText(data[MAKE]);
         tv_model.setText(data[MODEL]);
@@ -62,8 +67,8 @@ public class CarProfileFragment extends Fragment {
         tv_dtrain.setText(data[TRAIN]);
         tv_fuelrate.setText(Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))) + " Litres/100km");
         tv_fueltype.setText(data[TYPE]);
-        tv_costs.setText(data[COSTS]);
-        tv_savings.setText(data[SAVINGS]);
+        tv_costs.setText("$" + data[COSTS]);
+        tv_savings.setText("$" + data[SAVINGS]);
 
         Button profileBack = (Button) v.findViewById(R.id.profile_back);
         Button addRemove = (Button) v.findViewById(R.id.add_remove);
