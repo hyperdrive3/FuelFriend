@@ -187,18 +187,18 @@ public class MainActivity extends AppCompatActivity
         GeneralHelper.hideKeyboard(this);
         switch (item.getItemId()) {
             case R.id.nav_map:
-                setTitle("Travel History Map");
+                setTitle("Travel Map");
                 fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
                 break;
 
             case R.id.statistics:
-                setTitle("My Statistics");
+                setTitle("Statistics");
                 fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mStatisticsFragment).addToBackStack("statistics").commit();
 
                 break;
 
             case R.id.nav_manage:
-                setTitle("Personal Garage");
+                setTitle("Garage");
                 fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
                 break;
 
