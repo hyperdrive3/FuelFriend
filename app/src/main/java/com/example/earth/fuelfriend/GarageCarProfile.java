@@ -65,7 +65,7 @@ public class GarageCarProfile extends Fragment {
         Button remove = (Button) v.findViewById(R.id.remove);
         designate.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
         if (isDesignated()) {
-            designate.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
+            designate.setBackgroundColor(getResources().getColor(R.color.colorAccentSecondary));
             designate.setText("Designated");
 
         } else {
@@ -104,7 +104,7 @@ public class GarageCarProfile extends Fragment {
         }
 
         remove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
-        remove.setBackgroundColor(getResources().getColor(R.color.colorCarLine));
+        remove.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
