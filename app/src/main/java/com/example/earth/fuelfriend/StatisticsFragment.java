@@ -92,7 +92,7 @@ public class StatisticsFragment extends Fragment {
         float totalFuelUsage = totalFuelSavedBike + totalFuelSavedWalk + totalFuelSavedCar;
         pieChart.setCenterText((df.format(totalFuelUsage)) + "L");
         pieChart.setCenterTextSize(25);
-        pieChart.setCenterTextTypeface(Typeface.create("sans-serif-light", Typeface.BOLD));
+        pieChart.setCenterTextTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         pieChart.highlightValue(1, 0);
         pieChart.setDescription("");
         pieChart.setTouchEnabled(false);
@@ -109,26 +109,26 @@ public class StatisticsFragment extends Fragment {
         // Car
         TextView carDistance = (TextView) view.findViewById(R.id.total_car_distance);
         float totalCarDist = (float) statHelper.getTotalTransportDistance(TRANSPORT_CAR);
-        carDistance.setText(df.format(totalCarDist) + "km");
+        carDistance.setText(df.format(totalCarDist) + getString(R.string.km));
 
         TextView carFuel = (TextView) view.findViewById(R.id.total_car_fuel);
-        carFuel.setText(df.format(totalFuelSavedCar) + "L");
+        carFuel.setText(df.format(totalFuelSavedCar) + getString(R.string.litre));
 
         // Bike
         TextView bikeDistance = (TextView) view.findViewById(R.id.total_bike_distance);
         float totalBikeDist = (float) statHelper.getTotalTransportDistance(TRANSPORT_BIKE);
-        bikeDistance.setText(df.format(totalBikeDist) + "km");
+        bikeDistance.setText(df.format(totalBikeDist) + getString(R.string.km));
 
         TextView bikeFuel = (TextView) view.findViewById(R.id.total_bike_fuel);
-        bikeFuel.setText(df.format(totalFuelSavedBike) + "L");
+        bikeFuel.setText(df.format(totalFuelSavedBike) + getString(R.string.litre));
 
         // Walk
         TextView walkDistance = (TextView) view.findViewById(R.id.total_walk_distance);
         float totalWalkDist = (float) statHelper.getTotalTransportDistance(TRANSPORT_WALK);
-        walkDistance.setText(df.format(totalWalkDist) + "km");
+        walkDistance.setText(df.format(totalWalkDist) + getString(R.string.km));
 
         TextView walkFuel = (TextView) view.findViewById(R.id.total_walk_fuel);
-        walkFuel.setText(df.format(totalFuelSavedWalk) + "L");
+        walkFuel.setText(df.format(totalFuelSavedWalk) + getString(R.string.litre));
         return view;
     }
 
