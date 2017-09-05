@@ -43,9 +43,7 @@ public class CarProfileFragment extends Fragment {
                 data[TYPE], data[COSTS], data[SAVINGS]);
 
         View v = inflater.inflate(R.layout.vehicle_profile, container, false);
-        TextView tv_year = (TextView) v.findViewById(R.id.year);
-        TextView tv_make = (TextView) v.findViewById(R.id.make);
-        TextView tv_model = (TextView) v.findViewById(R.id.model);
+
         TextView tv_vclass = (TextView) v.findViewById(R.id.vclass);
         TextView tv_trans = (TextView) v.findViewById(R.id.transmission);
         TextView tv_dtrain = (TextView) v.findViewById(R.id.drivetrain);
@@ -59,9 +57,6 @@ public class CarProfileFragment extends Fragment {
         tv_header_year.setText(data[YEAR]);
         tv_header_makemodel.setText(data[MAKE] + " " + data[MODEL]);
 
-        tv_make.setText(data[MAKE]);
-        tv_model.setText(data[MODEL]);
-        tv_year.setText(data[YEAR]);
         tv_vclass.setText(data[CLASS]);
         tv_trans.setText(data[TRANSMISSION]);
         tv_dtrain.setText(data[TRAIN]);
