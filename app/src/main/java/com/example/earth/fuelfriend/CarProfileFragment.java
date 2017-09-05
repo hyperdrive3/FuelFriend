@@ -71,7 +71,7 @@ public class CarProfileFragment extends Fragment {
         final FragmentManager fm = getFragmentManager();
 
         profileBack.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
-        profileBack.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
+        profileBack.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +120,7 @@ public class CarProfileFragment extends Fragment {
             addRemove.setText(R.string.remove_vehicle);
             addRemove.setBackgroundColor(getResources().getColor(R.color.colorCarLine));
         } else {
-            addRemove.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
+            addRemove.setBackgroundColor(getResources().getColor(R.color.colorAccentSecondary));
             addRemove.setText(R.string.add_vehicle);
         }
     }
