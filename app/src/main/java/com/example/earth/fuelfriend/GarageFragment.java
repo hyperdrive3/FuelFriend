@@ -34,7 +34,7 @@ public class GarageFragment extends Fragment {
         pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.colorWalkLine));
 
         ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
-        mGarageAdapter = new GarageAdapter(getFragmentManager(), getContext());
+        mGarageAdapter = new GarageAdapter(getChildFragmentManager(), getContext());
         vpPager.setAdapter(mGarageAdapter);
 
         return view;
