@@ -86,7 +86,7 @@ public class CarProfileFragment extends Fragment {
                     try {
                         String s = f.getArguments().getString("searchFragment");
                         if (s.equals("searchFragment")) {
-                            getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit(); // Go back to the previous fragment
+                            getFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, f).commit(); // Go back to the previous fragment
                             break;
                         }
                     } catch (Exception ignored) {

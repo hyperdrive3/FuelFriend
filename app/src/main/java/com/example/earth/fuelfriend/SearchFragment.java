@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment {
                 cpf.setArguments(bundle);
 
                 FragmentManager fragmentManager = getFm();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, cpf, "mSearchAdapter").commit(); // lol change this
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, cpf, "mSearchAdapter").commit(); // lol change this
                 // When clicked, pass information to another fragment which displays information on the car
                 // and display a 'Add' button to add to personal database of cars which the user drives.
             }

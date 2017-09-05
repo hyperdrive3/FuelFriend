@@ -22,7 +22,7 @@
             android:layout_marginLeft="12dp"
             android:fontFamily="sans-serif-condensed"
             android:gravity="bottom"
-            android:textColor="@color/colorInfoWindowFont"
+            android:textColor="@android:color/white"
             android:textSize="23sp" />
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_marginLeft="12dp"
             android:fontFamily="sans-serif-condensed"
             android:gravity="bottom"
-            android:textColor="@color/colorInfoWindowFont"
+            android:textColor="@android:color/white"
             android:textSize="23sp"
             android:textStyle="bold" />
 

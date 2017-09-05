@@ -42,8 +42,7 @@ public class GarageCarProfile extends Fragment {
 
         final View v = inflater.inflate(R.layout.vehicle_tab, container, false);
         TextView tv_year = (TextView) v.findViewById(R.id.year);
-        TextView tv_make = (TextView) v.findViewById(R.id.make);
-        TextView tv_model = (TextView) v.findViewById(R.id.model);
+        TextView tv_make_model = (TextView) v.findViewById(R.id.header_carmakemodel);
         TextView tv_vclass = (TextView) v.findViewById(R.id.vclass);
         TextView tv_trans = (TextView) v.findViewById(R.id.transmission);
         TextView tv_dtrain = (TextView) v.findViewById(R.id.drivetrain);
@@ -52,16 +51,15 @@ public class GarageCarProfile extends Fragment {
         TextView tv_costs = (TextView) v.findViewById(R.id.annual_cost);
         TextView tv_savings = (TextView) v.findViewById(R.id.annual_savings);
 
-        tv_make.setText(data[MAKE]);
-        tv_model.setText(data[MODEL]);
+        tv_make_model.setText(data[MAKE] + " " + data[MODEL]);
         tv_year.setText(data[YEAR]);
         tv_vclass.setText(data[CLASS]);
         tv_trans.setText(data[TRANSMISSION]);
         tv_dtrain.setText(data[TRAIN]);
         tv_fuelrate.setText(data[RATE] + " Litres/100km");
         tv_fueltype.setText(data[TYPE]);
-        tv_costs.setText(data[COSTS]);
-        tv_savings.setText(data[SAVINGS]);
+        tv_costs.setText("$" + data[COSTS]);
+        tv_savings.setText("$" + data[SAVINGS]);
 
         final Button designate = (Button) v.findViewById(R.id.designate);
         Button remove = (Button) v.findViewById(R.id.remove);
