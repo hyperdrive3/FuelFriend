@@ -12,11 +12,11 @@
             android:title="@string/statistics" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_search_black_24dp"
+            android:icon="@drawable/ic_car_24dp"
             android:title="@string/view_vehicles" />
         <item
             android:id="@+id/nav_add"
-            android:icon="@drawable/ic_add_circle_outline_black_24dp"
+            android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/add_new_vehicle" />
         <item
             android:id="@+id/nav_about"
