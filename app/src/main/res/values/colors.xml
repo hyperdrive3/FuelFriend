@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimary">#434343</color>
     <color name="colorPrimaryDark">#282828</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorCarLine">#8e0439</color>
-    <color name="colorBikeLine">#006633</color>
-    <color name="colorWalkLine">#c19100</color>
+
+    <color name="colorAccent">#00a79d</color>
+    <color name="colorAccentSecondary">#00a79d</color>
+
+    <color name="colorCarLine">#d91b5b</color>
+    <color name="colorBikeLine">#fbaf3f</color>
+    <color name="colorWalkLine">#2ab573</color>
+
     <color name="colorInfoWindow">#0a777c</color>
     <color name="colorInfoWindowDark">#076166</color>
     <color name="colorInfoWindowFont">#d0d6d6</color>
+
     <color name="colorStatisticsBg">#f2f2f2</color>
     <color name="colorStatisticsShadow">#e5e5e5</color>
+
+
 </resources>
