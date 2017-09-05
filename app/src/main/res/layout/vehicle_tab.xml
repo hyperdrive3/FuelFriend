@@ -5,85 +5,179 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/year"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/make"
+    <LinearLayout
+        android:id="@+id/add_vehicle_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        android:layout_height="100dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/database_banner"
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/model"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/vclass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="bottom"
+            android:textColor="@android:color/white"
+            android:textSize="23sp" />
 
-    <TextView
-        android:id="@+id/transmission"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        <TextView
+            android:id="@+id/header_carmakemodel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="12dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="bottom"
+            android:textColor="@android:color/white"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/drivetrain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/fuelrate"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/fuel_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+        <LinearLayout
+            android:id="@+id/identifiers"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/annual_cost"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/annual_savings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.03"
-        android:textAlignment="center"
-        android:textSize="15sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Class"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Transmission"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Drivetrain"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Fuel Usage Rate"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Fuel Type"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Annual Cost"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:gravity="right"
+                android:text="Annual Savings"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/values"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vclass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/transmission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/drivetrain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/fuelrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/fuel_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/annual_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/annual_savings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.03"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/designate"
