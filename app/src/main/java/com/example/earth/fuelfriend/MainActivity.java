@@ -188,18 +188,18 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.nav_map:
                 setTitle("Travel History Map");
-                fragmentManager.beginTransaction().replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mSupportMapFragment).addToBackStack("map").commit();
                 break;
 
             case R.id.statistics:
                 setTitle("My Statistics");
-                fragmentManager.beginTransaction().replace(R.id.content_frame, mStatisticsFragment).addToBackStack("statistics").commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mStatisticsFragment).addToBackStack("statistics").commit();
 
                 break;
 
             case R.id.nav_manage:
                 setTitle("Personal Garage");
-                fragmentManager.beginTransaction().replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mGarageFragment).addToBackStack("garage").commit();
                 break;
 
             case R.id.nav_add:
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                     mSearchFragment.setArguments(bundle);
                 }
 
-                fragmentManager.beginTransaction().replace(R.id.content_frame, mSearchFragment).addToBackStack("search").commit();
+                fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).replace(R.id.content_frame, mSearchFragment).addToBackStack("search").commit();
                 break;
 
             case R.id.nav_about:
