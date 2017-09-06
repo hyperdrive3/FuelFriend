@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.setItemIconTintList(null);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
     }
@@ -266,20 +267,6 @@ public class MainActivity extends AppCompatActivity
     public void setNewTransportMarker(String transport) {
 
         if (!isDesignated(getBaseContext())) {
-/*            AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-            builder.setMessage("Cannot find designated vehicle information, please designate a vehicle you're going to be driving today.")
-                    .setTitle("Designate a Driven Vehicle");
-
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                    navigationView.getMenu().getItem(1).setChecked(true);
-                    onNavigationItemSelected(navigationView.getMenu().getItem(1));
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();*/
-
             Toast.makeText(this, "Please designate a vehicle from your garage first.", Toast.LENGTH_LONG).show(); //Placeholder message until dialog works.
             return;
         }
