@@ -4,13 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static com.example.earth.fuelfriend.Constants.CLASS;
 import static com.example.earth.fuelfriend.Constants.COSTS;
@@ -61,31 +62,23 @@ public class GarageCarProfile extends Fragment {
         tv_costs.setText("$" + data[COSTS]);
         tv_savings.setText("$" + data[SAVINGS]);
 
-        final Button designate = (Button) v.findViewById(R.id.designate);
-        Button remove = (Button) v.findViewById(R.id.remove);
-        designate.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
-        if (isDesignated()) {
-            designate.setBackgroundColor(getResources().getColor(R.color.colorAccentSecondary));
-            designate.setText("Designated");
+        final FloatingActionButton designate = (FloatingActionButton) v.findViewById(R.id.designate);
+        FloatingActionButton remove = (FloatingActionButton) v.findViewById(R.id.remove);
+        designate.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
+        designate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
 
-        } else {
-            designate.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
-            designate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-
+                if (isDesignated()) {
+                    Toast.makeText(getContext(), "This vehicle is currently designated.", Toast.LENGTH_SHORT).show();
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setMessage("Designate " + data[YEAR] + " " + data[MAKE] + " " + data[MODEL] + " as currently driven car?");
 
                     builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             designateCar(getArguments().getString("vehicle"));
-                            Button designateButton = (Button) view;
-                            designateButton.setBackgroundColor(getResources().getColor(R.color.colorBikeLine));
-                            designateButton.setText("Designated");
-
                             refreshFragment(container);
-
                         }
                     });
 
@@ -96,14 +89,11 @@ public class GarageCarProfile extends Fragment {
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
-
                 }
-            });
+            }
+        });
 
 
-        }
-
-        remove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
         remove.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
