@@ -188,14 +188,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.03"
-            android:text="@string/back" />
+            android:background="@color/colorPrimary"
+            android:drawablePadding="6dp"
+            android:drawableStart="@drawable/ic_arrow_back_24dp"
+            android:text="@string/back_to_search"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/add_remove"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="0.03"
-            android:text="@string/add_to_garage" />
+            android:text="@string/add_to_garage"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
