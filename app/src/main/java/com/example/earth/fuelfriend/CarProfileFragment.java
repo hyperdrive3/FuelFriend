@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -70,8 +71,6 @@ public class CarProfileFragment extends Fragment {
 
         final FragmentManager fm = getFragmentManager();
 
-        profileBack.setTextColor(getResources().getColor(R.color.colorInfoWindowFont));
-        profileBack.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         profileBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,15 +91,20 @@ public class CarProfileFragment extends Fragment {
         });
 
         removeOrAdd(addRemove);
-        addRemove.setTextColor(getResources().getColor(R.color.colorInfoWindowFont)); // Remove when I make a custom button layout
         addRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!inDatabase) {
+
+                    Toast.makeText(getContext(), "Vehicle added.", Toast.LENGTH_SHORT).show();
+
                     dbHelper.insertTransport(data[MAKE], data[MODEL], data[YEAR], data[CLASS], data[TRANSMISSION], data[TRAIN],
                             Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))),
                             data[TYPE], data[COSTS], data[SAVINGS]);
                 } else {
+
+                    Toast.makeText(getContext(), "Vehicle removed.", Toast.LENGTH_SHORT).show();
+
                     dbHelper.removeTransport(data[MAKE], data[MODEL], data[YEAR], data[CLASS], data[TRANSMISSION], data[TRAIN],
                             Double.toString(GeneralHelper.litrePerHundredKm(Double.valueOf(data[RATE]))),
                             data[TYPE], data[COSTS], data[SAVINGS]);
