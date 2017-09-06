@@ -64,7 +64,6 @@ public class GarageCarProfile extends Fragment {
 
         final FloatingActionButton designate = (FloatingActionButton) v.findViewById(R.id.designate);
         FloatingActionButton remove = (FloatingActionButton) v.findViewById(R.id.remove);
-        designate.setBackgroundColor(getResources().getColor(R.color.colorWalkLine));
         designate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -93,8 +92,6 @@ public class GarageCarProfile extends Fragment {
             }
         });
 
-
-        remove.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
