@@ -184,18 +184,18 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/add_remove"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.03"
-            android:text="@string/add_to_garage" />
-
-        <Button
             android:id="@+id/profile_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.03"
             android:text="@string/back" />
+
+        <Button
+            android:id="@+id/add_remove"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.03"
+            android:text="@string/add_to_garage" />
 
     </LinearLayout>
 
