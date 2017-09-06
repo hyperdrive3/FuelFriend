@@ -121,6 +121,8 @@ class DBHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
 
         }
+
+        db.close();
         return transport;
     }
 
@@ -144,6 +146,7 @@ class DBHelper extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
 
+        db.close();
         return markers;
     }
 
